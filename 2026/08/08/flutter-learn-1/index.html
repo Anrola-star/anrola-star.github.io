@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    
+    <meta name="author" content="Anrola">
+    
+    <!-- Completely eliminate flash of wrong theme -->
+    <script>
+        (function() {
+            const THEME_KEY = "REDEFINE-THEME-STATUS";
+            const DARK = "dark", LIGHT = "light";
+            
+            // Get preferred theme
+            function getTheme() {
+                try {
+                    const saved = localStorage.getItem(THEME_KEY);
+                    if (saved) {
+                        const { isDark } = JSON.parse(saved);
+                        return isDark ? DARK : LIGHT;
+                    }
+                } catch (e) {}
+                
+                return matchMedia("(prefers-color-scheme: dark)").matches ? DARK : LIGHT;
+            }
+            
+            // Apply theme to document
+            function applyTheme(theme) {
+                const isDark = theme === DARK;
+                const root = document.documentElement;
+                
+                // Set classes for compatibility
+                root.classList.add(theme);
+                root.classList.remove(isDark ? LIGHT : DARK);
+                root.style.colorScheme = theme;
+            }
+            
+            // Initial application
+            const theme = getTheme();
+            applyTheme(theme);
+            
+            // Listen for system preference changes
+            matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ({ matches }) => {
+                // Only update if using system preference (no localStorage entry)
+                if (!localStorage.getItem(THEME_KEY)) {
+                    applyTheme(matches ? DARK : LIGHT);
+                }
+            });
+            
+            // Set body classes ASAP (before DOMContentLoaded)
+            (function() {
+                const addBodyClass = () => {
+                    const b = document.body;
+                    if (!b) return false;
+                    b.classList.add(theme + "-mode");
+                    return true;
+                };
+
+                // Try immediately
+                if (addBodyClass()) return;
+
+                // Observe until body exists
+                const mo = new MutationObserver(() => {
+                    if (addBodyClass()) mo.disconnect();
+                });
+                mo.observe(document.documentElement, { childList: true, subtree: true });
+            })();
+        })();
+    </script>
+    
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://anrola-star.github.io/2026/08/08/flutter-learn-1/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+    
+        
+        <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="flutter学习">
+<meta property="og:url" content="https://anrola-star.github.io/2026/08/08/flutter-learn-1/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://anrola-star.github.io/images/redefine-og.webp">
+<meta property="article:published_time" content="2026-08-08T07:12:32.332Z">
+<meta property="article:modified_time" content="2026-08-13T10:12:31.942Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="flutter">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://anrola-star.github.io/images/redefine-og.webp">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/myIcon.jpg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/myIcon.jpg">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/myIcon.jpg">
+    <!--- Page Info-->
+    
+    <title>
+        
+            flutter学习 | Anrola博客——锐意学习中...
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/css/build/tailwind.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+    
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"anrola-star.github.io","root":"/","language":"en"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"delete_mask":false,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"github","dark":"vs2015"},"font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":{"enable":true,"default":"cc_by_nc_sa"},"lazyload":true,"pangu_js":false,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":{"enable":false,"custom_message":null},"side_tools":{"gear_rotation":true,"auto_expand":false},"open_graph":{"enable":true,"image":"/images/redefine-og.webp","description":"Hexo Theme Redefine, Redefine Your Hexo Journey."},"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/backGround_light.jpg","dark":"/images/backGround_dark.jpg"},"title":"下雨后的街道，闪烁着星光！⭐","subtitle":{"text":[""],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#C21CFF","dark":"#FF1C59"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":"ture","style":"default","links":[{"icon":"fa-brands fa-github","url":"https://github.com/Anrola-star"},{"icon":"fa-brands fa-twitter","url":null},{"icon":"fa-solid fa-at","url":"zxc2647162425@foxmail.com"},{"icon":"fa-brands fa-telegram","url":null},{"icon":"/images/custom-icon.svg","url":null}],"qrs":[{"icon":"fa-brands fa-weixin","qr":null},{"icon":"/images/custom-icon.svg","qr":null}]}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":"ture","type":"fixed","audios":[{"name":"白波トップウォーター","artist":"サカナクション","url":"\\music\\07 Shiranami Top Water.mp3","cover":null,"lrc":null},{"name":"潮汐","artist":"Vanguard Sound/赛博传媒-2064","url":"\\music\\潮汐.flac"}]},"mermaid":{"enable":false,"version":"11.4.1","theme":{"light":"default","dark":"dark"}}},"version":"2.9.0","navbar":{"auto_hide":"ture","color":{"left":"#f78736","right":"#367df7","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"标签":{"path":"/tags/","icon":"fa-regular fa-tags"},"分类":{"icon":"fa-regular fa-folder","path":"/categories/"},"说说":{"icon":null,"path":"/essays/"}},"search":{"enable":false,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur","masonry":{"batch_size":12,"initial_batch_size":24}},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"show_on_mobile":true,"links":null},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footer":{"runtime":true,"icon":"<i class=\"fa-solid fa-heart fa-beat\" style=\"--fa-animation-duration: 0.5s; color: #f54545\"></i>","start":"2022/8/17 11:45:14","statistics":true,"customize":null,"icp":{"enable":false,"number":null,"url":null}},"footerStart":"2022/8/17 11:45:14","mermaid":{"style":{"light":"default","dark":"dark"}}};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.i18n = {"search":"Search...","toc":"On this page","prev":"Prev","next":"Next","prev_posts":"Prev posts","next_posts":"Next posts","page":"Page %d","recent_posts":"Recent Posts","share":"Share","powered_by":"POWERED BY %s","theme":"THEME","rss_feed":"RSS Feed","category":"Category","categories":"Categories","tag":"Tag","tags":"Tags","post":"Post","posts":"Posts","tagcloud":"Tag Cloud","comment":"Comment","comments":"Comments","home":"Home","archive":"Archive","archives":"Archives","top":"TOP","sticky":"Sticky","go-back-home":"Go Back Home","masonry_loading":"Loading photos...","image_viewer":"Image viewer","close":"Close","exif":{"title":"EXIF","cards":{"camera":"Camera","lens":"Lens","exposure":"Exposure","other":"Other"},"fields":{"make":"Brand","model":"Model","date_taken":"Date taken","lens_model":"Lens","focal_length":"Focal length","focus_mode":"Focus mode","shutter":"Shutter","aperture":"Aperture","iso":"ISO","exposure_program":"Exposure program","exposure_compensation":"Exposure compensation","metering_mode":"Metering mode","flash":"Flash","white_balance":"White balance","latitude":"Latitude","longitude":"Longitude","altitude":"Altitude"},"status":{"loading":"Loading...","no_exif":"No EXIF available","library_missing":"EXIF library not loaded","image_source_missing":"Image source unavailable","unavailable":"EXIF unavailable (blocked by CORS or missing metadata)","flag_unavailable":"EXIF unavailable"}},"about":"About","changelog":"Changelog","links":"Links","link":"Link","friends":"Friends","friend":"Friend","timeline":"Timeline","shuoshuo":"Shuoshuo","bookmarks":"Bookmarks","site_uv":"VISITOR COUNT","site_pv":"TOTAL PAGE VIEWS","read_more":"Read more","wordcount":"Words","min2read":"Mins","status":"Status","runtime":"Blog up for","days":"days","hours":"hrs","minutes":"Min","seconds":"Sec","optimized_by":"and Optimized by Evan","rights":"All Rights Reserved","site_posts":"%s posts in total","site_wordcount":"%s words in total","copyright":{"author":"Author","title":"Title","link":"Link","create_time":"Created at","update_time":"Updated at","license_title":"License","license_content":"This work is licensed under %s.","all_rights_reserved":"All Rights Reserved &#169; %s","public_domain":"This work is in the public domain."},"ago":{"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"},"create_time":"Created","update_time":"Updated","expired":"This post is written %s days ago, and the content may not be up to date."};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+
+<body>
+	<div class="progress-bar-container">
+	
+
+	
+	<span class="pjax-progress-bar"></span>
+	<!--        <span class="swup-progress-icon">-->
+	<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+	<!--        </span>-->
+	
+</div>
+
+<main class="page-container" id="swup">
+
+	
+
+	<div class="main-content-container flex flex-col justify-between min-h-dvh">
+		<div class="main-content-header">
+			<header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                Anrola博客——锐意学习中...
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    HOME
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/tags/"
+                                        >
+                                    <i class="fa-regular fa-tags fa-fw"></i>
+                                    标签
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/categories/"
+                                        >
+                                    <i class="fa-regular fa-folder fa-fw"></i>
+                                    分类
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/essays/"
+                                        >
+                                    
+                                    说说
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/"
+                        >
+                            <span>
+                                HOME
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/tags/"
+                        >
+                            <span>
+                                标签
+                            </span>
+                            
+                                <i class="fa-regular fa-tags fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/categories/"
+                        >
+                            <span>
+                                分类
+                            </span>
+                            
+                                <i class="fa-regular fa-folder fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/essays/"
+                        >
+                            <span>
+                                说说
+                            </span>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+
+            
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">6</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">1</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">5</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+		</div>
+
+		<div class="main-content-body transition-fade-up">
+			
+
+			<div class="main-content">
+				<div class="post-page-container flex relative justify-between box-border w-full h-full">
+	<div class="article-content-container">
+
+		<div class="article-title relative w-full">
+			
+			<div class="w-full flex items-center pt-6 justify-start">
+				<h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">flutter学习</h1>
+			</div>
+			
+		</div>
+
+		
+		<div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+			<div class="avatar w-[46px] h-[46px] shrink-0 rounded-medium border border-border-color p-px">
+				<img src="/images/myIcon.jpg">
+			</div>
+			<div class="info flex flex-col justify-between">
+				<div class="author flex items-center">
+					<span class="name text-default-text-color text-lg font-semibold">Anrola</span>
+					
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv1</span>
+					
+				</div>
+				<div class="meta-info">
+					<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2026-08-08 15:12:32</span>
+        <span class="mobile">2026-08-08 15:12:32</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2026-08-13 18:12:31</span>
+            <span class="mobile">2026-08-13 18:12:31</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/flutter/">flutter</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+				</div>
+			</div>
+		</div>
+		
+
+		
+
+
+		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+			<h1 id="零-门"><a href="#零-门" class="headerlink" title="零.门"></a>零.门</h1><p>flutter文档：<a class="link"   target="_blank" rel="noopener" href="https://docs.flutter.cn/" >https://docs.flutter.cn/<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+<p>安装 <strong>Git</strong>。</p>
+<p>安装 <strong>Visual Studio Code</strong>。</p>
+<p>向 VS Code 添加 <strong>Dart</strong> 和 <strong>Flutter</strong> 扩展。</p>
+<p>在命令面板选择<strong>Flutter: New Project</strong>。<br>VS Code 会提示你在计算机上定位 Flutter SDK。选择 <strong>Download SDK</strong>。</p>
+<h1 id="一-你好世界"><a href="#一-你好世界" class="headerlink" title="一.你好世界"></a>一.你好世界</h1><p>在命令面板选择<strong>Flutter: New Project</strong>创建flutter项目。<br>此时就可以尝试运行项目了。<br>所有的代码都应该在<strong>lib</strong>里面书写。<br>此外，如果需要Window和Android版，则需要安装VS Studio和Android Studio。</p>
+<div class="code-container" data-rel="Dart"><figure class="iseeu highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">&#x27;package:flutter/material.dart&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> main() &#123;</span><br><span class="line">  runApp(<span class="keyword">const</span> MainApp());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MainApp</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> MainApp(&#123;<span class="keyword">super</span>.key&#125;);</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">const</span> MaterialApp(</span><br><span class="line">      home: Scaffold(</span><br><span class="line">        body: Center(</span><br><span class="line">          child: Text(<span class="string">&#x27;Hello World!&#x27;</span>),</span><br><span class="line">        ),</span><br><span class="line">      ),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+<h1 id=""><a href="#" class="headerlink" title=""></a></h1><p>可以尝试初步理解为“<strong>坑位</strong>” 和“<strong>窗口</strong>”。</p>
+<p>以上面为例子，MainApp继承StatelessWidget（无状态窗口），通过build函数构建窗口。</p>
+<p>build函数返回一个MaterialApp类型的<strong>窗口</strong>，</p>
+<p>MaterialApp里面有<strong>坑位home</strong> （MaterialApp的主体）。<br>在这个<strong>坑位home</strong>里放入了一个<strong>窗口Scaffold</strong>（框架）。</p>
+<p><strong>窗口Scaffold</strong>里又分了很多<strong>坑位</strong>，在<strong>坑位body</strong>里填入一个<strong>窗口Center</strong>，在<strong>窗口Center</strong>里的所有坑位都会居中显示。</p>
+<p><strong>窗口Center</strong>里又有<strong>坑位child</strong>，在<strong>坑位child</strong>里填入<strong>窗口Text</strong>，<strong>窗口Text</strong>用于显示文字，<strong>窗口Text</strong>也有文字的<strong>坑位</strong>，填入字符串’Hello World!’。</p>
+<p>这样<strong>坑位</strong>与<strong>窗口</strong>的无限套娃，就构成了这个简单的界面。</p>
+<p>其实这样看非常像HTML，如果做过网页开发，很快就能上手。</p>
+<h1 id="二-StatelessWidget（无状态窗口）"><a href="#二-StatelessWidget（无状态窗口）" class="headerlink" title="二.StatelessWidget（无状态窗口）"></a>二.StatelessWidget（无状态窗口）</h1><p>StatelessWidget的创建非常简单。</p>
+<div class="code-container" data-rel="Dart"><figure class="iseeu highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">&#x27;package:flutter/material.dart&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MainBackGround</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> MainBackGround(&#123;<span class="keyword">super</span>.key&#125;);</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> Container(color:Colors.red);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+<p>这样就获得了一个纯色的窗口了。<br>最核心的build函数，负责构建页面上的各种元素。<br>他需要返回一个Widget类，而Widget又是flutter最核心的类。<br>在实际写页面时，有很多时间都在和Widget打交道。</p>
+<h1 id="三-几种基础的Widget"><a href="#三-几种基础的Widget" class="headerlink" title="三.几种基础的Widget"></a>三.几种基础的Widget</h1><h2 id="Container"><a href="#Container" class="headerlink" title="Container"></a>Container</h2><p>基础容器。万能套娃Widget。<br>常用的属性基本都有。</p>
+<div class="code-container" data-rel="Dart"><figure class="iseeu highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Container(</span><br><span class="line">    margin: <span class="keyword">const</span> EdgeInsets.all(<span class="number">10.0</span>),</span><br><span class="line">    color: Colors.amber[<span class="number">600</span>],</span><br><span class="line">    width: <span class="number">48.0</span>,</span><br><span class="line">    height: <span class="number">48.0</span>,</span><br><span class="line">  )</span><br></pre></td></tr></table></figure></div>
+<div class="code-container" data-rel="Dart"><figure class="iseeu highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Container(</span><br><span class="line">  constraints: BoxConstraints.expand(</span><br><span class="line">    height: Theme.of(context).textTheme.headlineMedium!.fontSize! * <span class="number">1.1</span> + <span class="number">200.0</span>,</span><br><span class="line">  ),</span><br><span class="line">  padding: <span class="keyword">const</span> EdgeInsets.all(<span class="number">8.0</span>),</span><br><span class="line">  color: Colors.blue[<span class="number">600</span>],</span><br><span class="line">  alignment: Alignment.center,</span><br><span class="line">  transform: Matrix4.rotationZ(<span class="number">0.1</span>),</span><br><span class="line">  child: Text(<span class="string">&#x27;Hello World&#x27;</span>,</span><br><span class="line">    style: Theme.of(context)</span><br><span class="line">        .textTheme</span><br><span class="line">        .headlineMedium!</span><br><span class="line">        .copyWith(color: Colors.white)),</span><br><span class="line">)</span><br></pre></td></tr></table></figure></div>
+<h1 id="-1"><a href="#-1" class="headerlink" title=""></a></h1><h2 id="Column"><a href="#Column" class="headerlink" title="Column"></a>Column</h2><p>列布局。</p>
+<div class="code-container" data-rel="Dart"><figure class="iseeu highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Column(</span><br><span class="line"></span><br><span class="line">  children: &lt;Widget&gt;[</span><br><span class="line">    Text(<span class="string">&#x27;hello&#x27;</span>),</span><br><span class="line">    Text(<span class="string">&#x27;world&#x27;</span>),</span><br><span class="line">  ],</span><br><span class="line"></span><br><span class="line">  spacing:<span class="number">10</span>,</span><br><span class="line">)</span><br></pre></td></tr></table></figure></div>
+<p>核心的children参数运行放入多个Widget，多个Widget会排成列。<br>可以用spacing设置间隔。</p>
+<h2 id="Row"><a href="#Row" class="headerlink" title="Row"></a>Row</h2><p>行布局，与Colum类似。</p>
+<div class="code-container" data-rel="Dart"><figure class="iseeu highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Row(</span><br><span class="line"></span><br><span class="line">  children: &lt;Widget&gt;[</span><br><span class="line">    Text(<span class="string">&#x27;hello&#x27;</span>),</span><br><span class="line">    Text(<span class="string">&#x27;world&#x27;</span>),</span><br><span class="line">  ],</span><br><span class="line"></span><br><span class="line">  spacing:<span class="number">10</span>,</span><br><span class="line">)</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="Scaffold"><a href="#Scaffold" class="headerlink" title="Scaffold"></a>Scaffold</h2><p>一种布局，方便制造各种常用功能。<br>本身包含了常用的属性，可以很方便的设置：<br><strong>appBar</strong>：顶部条栏<br><strong>body</strong>：主体部分<br><strong>floatingActionButton</strong>：浮动按钮，默认在右下角<br><strong>floatingActionButtonLocation</strong>：浮动按钮的位置<br><strong>bottomNavigationBar</strong>：底部导航栏</p>
+<p>使用时一般放在Material内。</p>
+<div class="code-container" data-rel="Dart"><figure class="iseeu highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">MaterialApp(</span><br><span class="line">  home: Scaffold(</span><br><span class="line">  backgroundColor: Colors.amber,</span><br><span class="line">  body: Center(</span><br><span class="line">    child: TextButton(</span><br><span class="line">      onPressed: () &#123;&#125;,</span><br><span class="line">      child: <span class="keyword">const</span> Text(<span class="string">&#x27;111&#x27;</span>),</span><br><span class="line">      ),</span><br><span class="line">    ),</span><br><span class="line">  ),</span><br><span class="line">);</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="TextField"><a href="#TextField" class="headerlink" title="TextField"></a>TextField</h2><p>输入框。</p>
+<div class="code-container" data-rel="Dart"><figure class="iseeu highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">TextField(</span><br><span class="line">  obscureText: <span class="keyword">true</span>,</span><br><span class="line">  decoration: InputDecoration(</span><br><span class="line">    border: OutlineInputBorder(),</span><br><span class="line">    labelText: <span class="string">&#x27;Password&#x27;</span>,</span><br><span class="line">  ),</span><br><span class="line">)</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="Checkbox"><a href="#Checkbox" class="headerlink" title="Checkbox"></a>Checkbox</h2><p>勾选框。</p>
+<div class="code-container" data-rel="Dart"><figure class="iseeu highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">&#x27;package:flutter/material.dart&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> main() =&gt; runApp(<span class="keyword">const</span> CheckboxExample());</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CheckboxExample</span> <span class="keyword">extends</span> <span class="title">StatefulWidget</span> </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> CheckboxExample(&#123;<span class="keyword">super</span>.key&#125;);</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  State&lt;CheckboxExample&gt; createState() =&gt; _CheckboxExampleState();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">_CheckboxExampleState</span> <span class="keyword">extends</span> <span class="title">State</span>&lt;<span class="title">CheckboxExample</span>&gt; </span>&#123;</span><br><span class="line">  <span class="built_in">bool</span> isChecked = <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    Color getColor(<span class="built_in">Set</span>&lt;WidgetState&gt; states) &#123;</span><br><span class="line">      <span class="keyword">const</span> <span class="built_in">Set</span>&lt;WidgetState&gt; interactiveStates = &lt;WidgetState&gt;&#123;</span><br><span class="line">        WidgetState.pressed,</span><br><span class="line">        WidgetState.hovered,</span><br><span class="line">        WidgetState.focused,</span><br><span class="line">      &#125;;</span><br><span class="line">      <span class="keyword">if</span> (states.any(interactiveStates.contains)) &#123;</span><br><span class="line">        <span class="keyword">return</span> Colors.blue;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> Colors.red;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> Material(</span><br><span class="line">      child: Checkbox(</span><br><span class="line">        <span class="comment">//钩的颜色</span></span><br><span class="line">        checkColor: Colors.white, </span><br><span class="line">        <span class="comment">//框内的颜色</span></span><br><span class="line">        fillColor: WidgetStateProperty.resolveWith(getColor), </span><br><span class="line">        </span><br><span class="line">        <span class="comment">//状态的处理</span></span><br><span class="line">        value: isChecked,</span><br><span class="line">        onChanged: (<span class="built_in">bool?</span> value) &#123;</span><br><span class="line">          setState(() &#123;</span><br><span class="line">            isChecked = value!;</span><br><span class="line">          &#125;);</span><br><span class="line">        &#125;,</span><br><span class="line">      ),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="Switch"><a href="#Switch" class="headerlink" title="Switch"></a>Switch</h2><p>开关。</p>
+<div class="code-container" data-rel="Dart"><figure class="iseeu highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">&#x27;package:flutter/material.dart&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/// <span class="language-markdown">Flutter code sample for [Switch].</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> main() =&gt; runApp(<span class="keyword">const</span> SwitchApp());</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SwitchApp</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> SwitchApp(&#123;<span class="keyword">super</span>.key&#125;);</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> MaterialApp(</span><br><span class="line">      home: Scaffold(</span><br><span class="line">        appBar: AppBar(title: <span class="keyword">const</span> Text(<span class="string">&#x27;Switch Sample&#x27;</span>)),</span><br><span class="line">        body: <span class="keyword">const</span> Center(child: SwitchExample()),</span><br><span class="line">      ),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SwitchExample</span> <span class="keyword">extends</span> <span class="title">StatefulWidget</span> </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> SwitchExample(&#123;<span class="keyword">super</span>.key&#125;);</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  State&lt;SwitchExample&gt; createState() =&gt; _SwitchExampleState();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">_SwitchExampleState</span> <span class="keyword">extends</span> <span class="title">State</span>&lt;<span class="title">SwitchExample</span>&gt; </span>&#123;</span><br><span class="line">  <span class="built_in">bool</span> light = <span class="keyword">true</span>;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> Switch(</span><br><span class="line">      <span class="comment">// This bool value toggles the switch.</span></span><br><span class="line">      value: light,</span><br><span class="line">      activeThumbColor: Colors.red,</span><br><span class="line">      onChanged: (<span class="built_in">bool</span> value) &#123;</span><br><span class="line">        <span class="comment">// This is called when the user toggles the switch.</span></span><br><span class="line">        setState(() &#123;</span><br><span class="line">          light = value;</span><br><span class="line">        &#125;);</span><br><span class="line">      &#125;,</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="Slider"><a href="#Slider" class="headerlink" title="Slider"></a>Slider</h2><p>滑动条。</p>
+<div class="code-container" data-rel="Dart"><figure class="iseeu highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">&#x27;package:flutter/material.dart&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/// <span class="language-markdown">Flutter code sample for [Slider].</span></span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">set to false.</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> main() =&gt; runApp(<span class="keyword">const</span> SliderExampleApp());</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SliderExampleApp</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> SliderExampleApp(&#123;<span class="keyword">super</span>.key&#125;);</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">const</span> MaterialApp(home: SliderExample());</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SliderExample</span> <span class="keyword">extends</span> <span class="title">StatefulWidget</span> </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> SliderExample(&#123;<span class="keyword">super</span>.key&#125;);</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  State&lt;SliderExample&gt; createState() =&gt; _SliderExampleState();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">_SliderExampleState</span> <span class="keyword">extends</span> <span class="title">State</span>&lt;<span class="title">SliderExample</span>&gt; </span>&#123;</span><br><span class="line">  <span class="built_in">double</span> _currentSliderValue = <span class="number">20</span>;</span><br><span class="line">  <span class="built_in">double</span> _currentDiscreteSliderValue = <span class="number">60</span>;</span><br><span class="line">  <span class="built_in">bool</span> year2023 = <span class="keyword">true</span>;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> Scaffold(</span><br><span class="line">      appBar: AppBar(title: <span class="keyword">const</span> Text(<span class="string">&#x27;Slider&#x27;</span>)),</span><br><span class="line">      body: Center(</span><br><span class="line">        child: Column(</span><br><span class="line">          mainAxisAlignment: .center,</span><br><span class="line">          spacing: <span class="number">16</span>,</span><br><span class="line">          children: &lt;Widget&gt;[</span><br><span class="line">            Slider(</span><br><span class="line">              <span class="comment">// ignore: deprecated_member_use</span></span><br><span class="line">              year2023: year2023,</span><br><span class="line">              value: _currentSliderValue,</span><br><span class="line">              max: <span class="number">100</span>,</span><br><span class="line">              onChanged: (<span class="built_in">double</span> value) &#123;</span><br><span class="line">                setState(() &#123;</span><br><span class="line">                  _currentSliderValue = value;</span><br><span class="line">                &#125;);</span><br><span class="line">              &#125;,</span><br><span class="line">            ),</span><br><span class="line">            Slider(</span><br><span class="line">              <span class="comment">// ignore: deprecated_member_use</span></span><br><span class="line">              year2023: year2023,</span><br><span class="line">              value: _currentDiscreteSliderValue,</span><br><span class="line">              max: <span class="number">100</span>,</span><br><span class="line">              divisions: <span class="number">5</span>,</span><br><span class="line">              label: _currentDiscreteSliderValue.round().toString(),</span><br><span class="line">              onChanged: (<span class="built_in">double</span> value) &#123;</span><br><span class="line">                setState(() &#123;</span><br><span class="line">                  _currentDiscreteSliderValue = value;</span><br><span class="line">                &#125;);</span><br><span class="line">              &#125;,</span><br><span class="line">            ),</span><br><span class="line">            SwitchListTile(</span><br><span class="line">              value: year2023,</span><br><span class="line">              title: year2023</span><br><span class="line">                  ? <span class="keyword">const</span> Text(<span class="string">&#x27;Switch to latest M3 style&#x27;</span>)</span><br><span class="line">                  : <span class="keyword">const</span> Text(<span class="string">&#x27;Switch to year2023 M3 style&#x27;</span>),</span><br><span class="line">              onChanged: (<span class="built_in">bool</span> value) &#123;</span><br><span class="line">                setState(() &#123;</span><br><span class="line">                  year2023 = !year2023;</span><br><span class="line">                &#125;);</span><br><span class="line">              &#125;,</span><br><span class="line">            ),</span><br><span class="line">          ],</span><br><span class="line">        ),</span><br><span class="line">      ),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="TextButton"><a href="#TextButton" class="headerlink" title="TextButton"></a>TextButton</h2><p>顾名思义文字按钮。</p>
+<div class="code-container" data-rel="Dart"><figure class="iseeu highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">TextButton(</span><br><span class="line">  onFocusChange: (value) &#123;&#125;, <span class="comment">//聚焦时</span></span><br><span class="line">  onHover: (value) &#123;&#125;,       <span class="comment">//悬停时</span></span><br><span class="line">  onLongPress: () &#123;&#125;,        <span class="comment">//长按时</span></span><br><span class="line">  onPressed: () &#123;&#125;,          <span class="comment">//按下时</span></span><br><span class="line">  style: ButtonStyle(        <span class="comment">//设置样式</span></span><br><span class="line">      backgroundColor: </span><br><span class="line">        WidgetStatePropertyAll(Colors.red)</span><br><span class="line">  ),</span><br><span class="line">  child: Text(<span class="string">&quot;1111&quot;</span>),       <span class="comment">//设置文字</span></span><br><span class="line">),</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="ElevatedButton"><a href="#ElevatedButton" class="headerlink" title="ElevatedButton"></a>ElevatedButton</h2><p>升降按钮，按下时会有升降效果。<br>参数与TextButton类似。</p>
+<h2 id="IconButton"><a href="#IconButton" class="headerlink" title="IconButton"></a>IconButton</h2><p>图标按钮。</p>
+<div class="code-container" data-rel="Dart"><figure class="iseeu highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">IconButton(</span><br><span class="line">  onHover: (value) &#123;&#125;,</span><br><span class="line">  onLongPress: () &#123;&#125;,</span><br><span class="line">  onPressed: () &#123;&#125;,</span><br><span class="line">  icon: Icon(Icons.close),</span><br><span class="line">),</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="SegmentedButton"><a href="#SegmentedButton" class="headerlink" title="SegmentedButton"></a>SegmentedButton</h2><p>一排选择性按钮，一般用于切换页面。</p>
+<p>必须注意selected和onSelectionChanged。<br>segments里的各个value都要和selected里的对上。</p>
+<p>官方示例：</p>
+<div class="code-container" data-rel="Dart"><figure class="iseeu highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SegmentedButtonExample</span> <span class="keyword">extends</span> <span class="title">StatefulWidget</span> </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> SegmentedButtonExample(&#123;<span class="keyword">super</span>.key&#125;);</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  State&lt;SegmentedButtonExample&gt; createState() =&gt; _SegmentedButtonExampleState();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">enum</span> Calendar &#123; day, week, month, year &#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">_SegmentedButtonExampleState</span> <span class="keyword">extends</span> <span class="title">State</span>&lt;<span class="title">SegmentedButtonExample</span>&gt; </span>&#123;</span><br><span class="line">  Calendar calendarView = .week;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> SegmentedButton&lt;Calendar&gt;(</span><br><span class="line">      style: SegmentedButton.styleFrom(</span><br><span class="line">        backgroundColor: Colors.grey[<span class="number">200</span>],</span><br><span class="line">        foregroundColor: Colors.red,</span><br><span class="line">        selectedForegroundColor: Colors.white,</span><br><span class="line">        selectedBackgroundColor: Colors.green,</span><br><span class="line">      ),</span><br><span class="line">      segments: <span class="keyword">const</span> &lt;ButtonSegment&lt;Calendar&gt;&gt;[</span><br><span class="line">        ButtonSegment&lt;Calendar&gt;(</span><br><span class="line">          value: Calendar.day,</span><br><span class="line">          label: Text(<span class="string">&#x27;Day&#x27;</span>),</span><br><span class="line">          icon: Icon(Icons.calendar_view_day),</span><br><span class="line">        ),</span><br><span class="line">        ButtonSegment&lt;Calendar&gt;(</span><br><span class="line">          value: Calendar.week,</span><br><span class="line">          label: Text(<span class="string">&#x27;Week&#x27;</span>),</span><br><span class="line">          icon: Icon(Icons.calendar_view_week),</span><br><span class="line">        ),</span><br><span class="line">        ButtonSegment&lt;Calendar&gt;(</span><br><span class="line">          value: Calendar.month,</span><br><span class="line">          label: Text(<span class="string">&#x27;Month&#x27;</span>),</span><br><span class="line">          icon: Icon(Icons.calendar_view_month),</span><br><span class="line">        ),</span><br><span class="line">        ButtonSegment&lt;Calendar&gt;(</span><br><span class="line">          value: Calendar.year,</span><br><span class="line">          label: Text(<span class="string">&#x27;Year&#x27;</span>),</span><br><span class="line">          icon: Icon(Icons.calendar_today),</span><br><span class="line">        ),</span><br><span class="line">      ],</span><br><span class="line">      selected: &lt;Calendar&gt;&#123;calendarView&#125;,</span><br><span class="line">      onSelectionChanged: (<span class="built_in">Set</span>&lt;Calendar&gt; newSelection) &#123;</span><br><span class="line">        setState(() &#123;</span><br><span class="line">          <span class="comment">// By default there is only a single segment that can be</span></span><br><span class="line">          <span class="comment">// selected at one time, so its value is always the first</span></span><br><span class="line">          <span class="comment">// item in the selected set.</span></span><br><span class="line">          calendarView = newSelection.first;</span><br><span class="line">        &#125;);</span><br><span class="line">      &#125;,</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="Badge"><a href="#Badge" class="headerlink" title="Badge"></a>Badge</h2><p>本质是一种Icon。<br>可以在Icon上设置标签和计数。<br>配合IconButton使用：</p>
+<div class="code-container" data-rel="Dart"><figure class="iseeu highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">IconButton(</span><br><span class="line">  icon: <span class="keyword">const</span> Badge(</span><br><span class="line">    label: Text(<span class="string">&#x27;Your label&#x27;</span>),</span><br><span class="line">    backgroundColor: Colors.blueAccent,</span><br><span class="line">    child: Icon(Icons.receipt),</span><br><span class="line">  ),</span><br><span class="line">  onPressed: () &#123;&#125;,</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">IconButton(</span><br><span class="line">  icon: Badge.count(</span><br><span class="line">    count: <span class="number">9999</span>,</span><br><span class="line">    child: <span class="keyword">const</span> Icon(Icons.notifications),</span><br><span class="line">  ),</span><br><span class="line">  onPressed: () &#123;&#125;,</span><br><span class="line">)</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="SnackBar"><a href="#SnackBar" class="headerlink" title="SnackBar"></a>SnackBar</h2><p>从底部弹出提示，特别的是提示上可以附带操作。</p>
+<div class="code-container" data-rel="Dart"><figure class="iseeu highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">ScaffoldMessenger.of(context).showSnackBar(</span><br><span class="line">  SnackBar(</span><br><span class="line">    content: <span class="keyword">const</span> Text(<span class="string">&#x27;Awesome Snackbar!&#x27;</span>),</span><br><span class="line">    action: SnackBarAction(</span><br><span class="line">      label: <span class="string">&#x27;Action&#x27;</span>,</span><br><span class="line">      onPressed: () &#123;&#125;,</span><br><span class="line">    ),</span><br><span class="line">    <span class="comment">//默认fixed从底部滑入，floating则为浮动。</span></span><br><span class="line">    behavior: SnackBarBehavior.floating,</span><br><span class="line">    <span class="comment">//持续时间</span></span><br><span class="line">    duration: <span class="built_in">Duration</span>(milliseconds: <span class="number">2000</span>),</span><br><span class="line">  ),</span><br><span class="line">);</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="续一-各种属性"><a href="#续一-各种属性" class="headerlink" title="续一.各种属性"></a>续一.各种属性</h1><p>接下来先以Container内可以填入的属性为例子介绍各种属性。</p>
+<div class="code-container" data-rel="Dart"><figure class="iseeu highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">Key? key,</span><br><span class="line">AlignmentGeometry? alignment,</span><br><span class="line">EdgeInsetsGeometry? padding,</span><br><span class="line">Color? color,</span><br><span class="line"><span class="built_in">bool</span> isAntiAlias = <span class="keyword">true</span>,</span><br><span class="line">Decoration? decoration,</span><br><span class="line">Decoration? foregroundDecoration,</span><br><span class="line"><span class="built_in">double?</span> width,</span><br><span class="line"><span class="built_in">double?</span> height,</span><br><span class="line">BoxConstraints? constraints,</span><br><span class="line">EdgeInsetsGeometry? margin,</span><br><span class="line">Matrix4? transform,</span><br><span class="line">AlignmentGeometry? transformAlignment,</span><br><span class="line">Widget? child,</span><br><span class="line">Clip clipBehavior = Clip.none,</span><br></pre></td></tr></table></figure></div>
+<h2 id="alignment"><a href="#alignment" class="headerlink" title="alignment"></a>alignment</h2><p>alignment用于设置位置。</p>
+<div class="code-container" data-rel="Dart"><figure class="iseeu highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 常见的居中，底部，顶部，左右都有。</span></span><br><span class="line">AlignmentGeometry.center</span><br><span class="line">AlignmentGeometry.bottomCenter</span><br><span class="line">AlignmentGeometry.topCenter</span><br><span class="line">AlignmentGeometry.centerLeft</span><br><span class="line"></span><br><span class="line"><span class="comment">//也可以自己设置xy轴</span></span><br><span class="line">AlignmentGeometry.xy(<span class="number">0</span>,<span class="number">0</span>) <span class="comment">//等价与居中</span></span><br><span class="line"></span><br><span class="line">AlignmentGeometry.xy(-<span class="number">1</span>,-<span class="number">1</span>) <span class="comment">//左上角</span></span><br><span class="line"></span><br><span class="line">AlignmentGeometry.xy(-<span class="number">1</span>,<span class="number">1</span>) <span class="comment">//左下角</span></span><br><span class="line"></span><br><span class="line">AlignmentGeometry.xy(-<span class="number">0.5</span>,-<span class="number">0.5</span>) <span class="comment">// 左上角和中心点的中间</span></span><br></pre></td></tr></table></figure></div>
+<h2 id="key"><a href="#key" class="headerlink" title="key"></a>key</h2><p>分为<strong>LocalKey</strong>和<strong>GlobalKey</strong>。<br>理解为窗口的身份证，GlobalKey是这个窗口在整个软件里唯一的身份证，LocalKey是这个窗口的父元素里唯一的身份证。<br>抽象比喻为，GlobalKey是国家发的身份证，LocalKey是某家公司内部用的工号。</p>
+<p>通过key能获取到窗口的Context、State和Widget。<br>在多窗口联动时可能会有用。</p>
+<h2 id="padding-和-margin"><a href="#padding-和-margin" class="headerlink" title="padding 和 margin"></a>padding 和 margin</h2><p>padding内边距。<br>margin外边距。<br>两者属性差不多，以padding为例说明。</p>
+<h1 id="-2"><a href="#-2" class="headerlink" title=""></a></h1><div class="code-container" data-rel="Dart"><figure class="iseeu highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EdgeInsets.all(<span class="number">8</span>)</span><br></pre></td></tr></table></figure></div>
+<p>所有边都有8的内边距。</p>
+<h1 id="-3"><a href="#-3" class="headerlink" title=""></a></h1><div class="code-container" data-rel="Dart"><figure class="iseeu highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EdgeInsets.only(left: <span class="number">8</span>,right: <span class="number">8</span>,top: <span class="number">8</span>,bottom: <span class="number">8</span>)</span><br></pre></td></tr></table></figure></div>
+<p>单独指定各边的内边距。</p>
+<h1 id="-4"><a href="#-4" class="headerlink" title=""></a></h1><div class="code-container" data-rel="Dart"><figure class="iseeu highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EdgeInsets.symmetric(vertical: <span class="number">10</span>,horizontal: <span class="number">10</span>)</span><br></pre></td></tr></table></figure></div>
+<p>对称型内边距，可以设置垂直和水平的内边距。</p>
+<h1 id="-5"><a href="#-5" class="headerlink" title=""></a></h1><div class="code-container" data-rel="Dart"><figure class="iseeu highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EdgeInsets.lerp(EdgeInsets.all(<span class="number">0</span>), EdgeInsets.all(<span class="number">10</span>),<span class="number">0</span>)</span><br></pre></td></tr></table></figure></div>
+<p>线性插值，表示从0到10的插值。<br>t表示时间线上的位置，0时为EdgeInsets.all(0)，1时为EdgeInsets.all(10)。<br>即便超过0或1也依然有效果。</p>
+<p>通常搭配AnimationController使用。下面一个简单的例子。</p>
+<div class="code-container" data-rel="Dart"><figure class="iseeu highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">&#x27;package:flutter/material.dart&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">W2</span> <span class="keyword">extends</span> <span class="title">StatefulWidget</span> </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> W2(&#123;<span class="keyword">super</span>.key&#125;);</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  State&lt;StatefulWidget&gt; createState() &#123;</span><br><span class="line">    <span class="keyword">return</span> W2State();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 注意这里的 with SingleTickerProviderStateMixin</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">W2State</span> <span class="keyword">extends</span> <span class="title">State</span>&lt;<span class="title">W2</span>&gt; <span class="title">with</span> <span class="title">SingleTickerProviderStateMixin</span> </span>&#123;</span><br><span class="line">  <span class="keyword">late</span> AnimationController animationController;</span><br><span class="line">  <span class="built_in">double</span> myPadding = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  <span class="keyword">void</span> initState() &#123;</span><br><span class="line">    <span class="keyword">super</span>.initState();</span><br><span class="line">    animationController =</span><br><span class="line">        AnimationController(vsync: <span class="keyword">this</span>, duration: <span class="built_in">Duration</span>(milliseconds: <span class="number">10000</span>))</span><br><span class="line">          ..addStatusListener((AnimationStatus status) &#123;</span><br><span class="line">            <span class="comment">//状态监听，动画完成时反转。</span></span><br><span class="line">            <span class="keyword">if</span> (status == AnimationStatus.completed) &#123;</span><br><span class="line">              animationController.reverse();</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (status == AnimationStatus.dismissed) &#123;</span><br><span class="line">              animationController.forward();</span><br><span class="line">            &#125;</span><br><span class="line">          &#125;)</span><br><span class="line">          ..addListener(() &#123;</span><br><span class="line">            <span class="comment">//value监听，每次value改变都会调用这里。</span></span><br><span class="line">            <span class="comment">//在这里加上setState，就能持续改变页面的各种属性。</span></span><br><span class="line">            setState(() &#123;</span><br><span class="line">              myPadding = animationController.value;</span><br><span class="line">            &#125;);</span><br><span class="line">          &#125;);</span><br><span class="line">    animationController.forward();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> Container(</span><br><span class="line">      padding: EdgeInsets.lerp(</span><br><span class="line">        EdgeInsets.all(<span class="number">1</span>),</span><br><span class="line">        EdgeInsets.all(<span class="number">50</span>),</span><br><span class="line">        myPadding,</span><br><span class="line">      ),</span><br><span class="line">      color: Colors.red,</span><br><span class="line">      child: Container(color: Colors.amber),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="color"><a href="#color" class="headerlink" title="color"></a>color</h2><p>顾名思义颜色。<br>flutter预制了一些颜色：</p>
+<div class="code-container" data-rel="Dart"><figure class="iseeu highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Colors.red</span><br><span class="line">Colors.blue</span><br><span class="line">Colors.blue</span><br><span class="line">....</span><br></pre></td></tr></table></figure></div>
+
+<p>也能从ARGB获取颜色</p>
+<div class="code-container" data-rel="Dart"><figure class="iseeu highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//alpha为透明度，red、green、blue分别为红绿蓝</span></span><br><span class="line"><span class="comment">//取值0~255</span></span><br><span class="line">color: Color.fromARGB(alpha, red, green, blue)</span><br><span class="line"></span><br><span class="line"><span class="comment">//可以指定颜色空间</span></span><br><span class="line">Color.from(alpha: alpha, red: red, green: green, blue: blue, colorSpace: ColorSpace.sRGB)</span><br><span class="line"></span><br><span class="line"><span class="comment">//rgb取值0~255，opacity透明的取值0.0~1.0</span></span><br><span class="line">Color.fromRGBO(r, g, b, opacity)</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="isAntiAlias"><a href="#isAntiAlias" class="headerlink" title="isAntiAlias"></a>isAntiAlias</h2><p>抗锯齿开关。默认ture。</p>
+<h2 id="decoration-和-foregroundDecoration"><a href="#decoration-和-foregroundDecoration" class="headerlink" title="decoration 和 foregroundDecoration"></a>decoration 和 foregroundDecoration</h2><p>一个背景装饰对象，定制各种各样的背景（边框、圆角、阴影、形状、渐变、背景图像）。<br>其中decoration是背景，foregroundDecoration是前景。</p>
+<div class="code-container" data-rel="Dart"><figure class="iseeu highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">BoxDecoration(&#123;</span><br><span class="line">    <span class="keyword">this</span>.color, <span class="comment">// 底色</span></span><br><span class="line">    <span class="keyword">this</span>.image, <span class="comment">// 图片</span></span><br><span class="line">    <span class="keyword">this</span>.border, <span class="comment">//边</span></span><br><span class="line">    <span class="keyword">this</span>.borderRadius, <span class="comment">// 圆角度</span></span><br><span class="line">    <span class="keyword">this</span>.boxShadow, <span class="comment">// 阴影</span></span><br><span class="line">    <span class="keyword">this</span>.gradient, <span class="comment">// 渐变</span></span><br><span class="line">    <span class="keyword">this</span>.backgroundBlendMode, <span class="comment">// 混合Mode</span></span><br><span class="line">    <span class="keyword">this</span>.shape = BoxShape.rectangle,  <span class="comment">// 形状</span></span><br><span class="line">  &#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">//例子：</span></span><br><span class="line">BoxDecoration(</span><br><span class="line">  border: <span class="keyword">new</span> Border.all(color: Colors.red, width: <span class="number">0.5</span>), <span class="comment">// 边色与边宽度</span></span><br><span class="line">  color: Colors.blue, <span class="comment">// 底色</span></span><br><span class="line">  borderRadius: <span class="keyword">new</span> BorderRadius.circular((<span class="number">20.0</span>)), <span class="comment">// 圆角度</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  <span class="comment">//生成两层阴影，一层绿，一层黄</span></span><br><span class="line">  <span class="comment">//阴影位置由offset决定</span></span><br><span class="line">  <span class="comment">//阴影模糊程度由blurRadius决定</span></span><br><span class="line">  <span class="comment">//阴影模糊大小由spreadRadius决定</span></span><br><span class="line">  boxShadow: </span><br><span class="line">  [BoxShadow(color: Color(<span class="number">0x99FFFF00</span>), offset: Offset(<span class="number">5.0</span>, <span class="number">5.0</span>),blurRadius: <span class="number">10.0</span>, spreadRadius: <span class="number">2.0</span>), </span><br><span class="line">  BoxShadow(color: Color(<span class="number">0x9900FF00</span>), offset: Offset(<span class="number">1.0</span>, <span class="number">1.0</span>)), </span><br><span class="line">  BoxShadow(color: Color(<span class="number">0xFF0000FF</span>))],</span><br><span class="line"></span><br><span class="line">  <span class="comment">//渐变色</span></span><br><span class="line">  <span class="comment">//环形渐变</span></span><br><span class="line">  gradient: </span><br><span class="line">  RadialGradient(</span><br><span class="line">    colors: [</span><br><span class="line">      Color(<span class="number">0xFFFFFF00</span>), </span><br><span class="line">      Color(<span class="number">0xFF00FF00</span>), </span><br><span class="line">      Color(<span class="number">0xFF00FFFF</span>)</span><br><span class="line">    ],</span><br><span class="line">    radius: <span class="number">1</span>, </span><br><span class="line">    tileMode: TileMode.mirror</span><br><span class="line">  )</span><br><span class="line">  <span class="comment">//扫描式渐变</span></span><br><span class="line">  <span class="comment">//gradient: SweepGradient(colors: [Color(0xFFFFFF00), Color(0xFF00FF00), Color(0xFF00FFFF)], startAngle: 0.0, endAngle: 1*3.14)</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">//线性渐变</span></span><br><span class="line">  <span class="comment">//gradient: LinearGradient(colors: [Color(0xFFFFFF00), Color(0xFF00FF00), Color(0xFF00FFFF)], begin: FractionalOffset(1, 0), end: FractionalOffset(0, 1))</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="-6"><a href="#-6" class="headerlink" title=""></a></h1><div class="code-container" data-rel="Dart"><figure class="iseeu highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">ShapeDecoration(&#123;</span><br><span class="line">  <span class="keyword">this</span>.color,</span><br><span class="line">  <span class="keyword">this</span>.image,</span><br><span class="line">  <span class="keyword">this</span>.gradient,</span><br><span class="line">  <span class="keyword">this</span>.shadows,</span><br><span class="line">  <span class="meta">@required</span> <span class="keyword">this</span>.shape,</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></div>
+<p>ShapeDecoration只有shape属性不一样，单独研究一下。</p>
+<div class="code-container" data-rel="Dart"><figure class="iseeu highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//全边</span></span><br><span class="line">shape: Border.all(color: Color(<span class="number">0xFF00FFFF</span>),style: BorderStyle.solid,width: <span class="number">2</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">//单独指定边</span></span><br><span class="line">shape: Border(top: b, bottom: b, right: b, left: b)</span><br><span class="line"></span><br><span class="line"><span class="comment">//下边线</span></span><br><span class="line">shape: UnderlineInputBorder(borderSide:BorderSide(color: Color(<span class="number">0xFFFFFFFF</span>), style: BorderStyle.solid, width: <span class="number">2</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment">//矩形</span></span><br><span class="line">shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(<span class="number">10</span>)), side: BorderSide(color: Color(<span class="number">0xFFFFFFFF</span>), style: BorderStyle.solid, width: <span class="number">2</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment">//圆形</span></span><br><span class="line">shape: CircleBorder(side: BorderSide(color: Color(<span class="number">0xFFFFFF00</span>), style: BorderStyle.solid, width: <span class="number">2</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment">//椭圆</span></span><br><span class="line">shape: StadiumBorder(side: BorderSide(width: <span class="number">2</span>, style: BorderStyle.solid, color: Color(<span class="number">0xFF00FFFF</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment">//角形</span></span><br><span class="line">shape: BeveledRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(<span class="number">10</span>)), side: BorderSide(color: Color(<span class="number">0xFFFFFFFF</span>), style: BorderStyle.solid, width: <span class="number">2</span>))</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="-7"><a href="#-7" class="headerlink" title=""></a></h1><div class="code-container" data-rel="Dart"><figure class="iseeu highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">FlutterLogoDecoration(&#123;</span><br><span class="line">  <span class="keyword">this</span>.lightColor = <span class="keyword">const</span> Color(<span class="number">0xFF42A5F5</span>), <span class="comment">// Colors.blue[400]</span></span><br><span class="line">  <span class="keyword">this</span>.darkColor = <span class="keyword">const</span> Color(<span class="number">0xFF0D47A1</span>), <span class="comment">// Colors.blue[900]</span></span><br><span class="line">  <span class="keyword">this</span>.textColor = <span class="keyword">const</span> Color(<span class="number">0xFF616161</span>),</span><br><span class="line">  <span class="keyword">this</span>.style = FlutterLogoStyle.markOnly,</span><br><span class="line">  <span class="keyword">this</span>.margin = EdgeInsets.zero,</span><br><span class="line">&#125;) </span><br></pre></td></tr></table></figure></div>
+<p>专门用作logo的Decoration。</p>
+<div class="code-container" data-rel="Dart"><figure class="iseeu highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">UnderlineTabIndicator(&#123;</span><br><span class="line">  <span class="keyword">this</span>.borderSide = <span class="keyword">const</span> BorderSide(width: <span class="number">2.0</span>, color: Colors.white),</span><br><span class="line">  <span class="keyword">this</span>.insets = EdgeInsets.zero,</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></div>
+<p>用于添加下划线指示。</p>
+<h2 id="width-和-height"><a href="#width-和-height" class="headerlink" title="width 和 height"></a>width 和 height</h2><p>指定高度和宽度</p>
+<h2 id="constraints"><a href="#constraints" class="headerlink" title="constraints"></a>constraints</h2><p>尺寸约束，划定一个“可活动的尺寸范围”，实际尺寸必须在这个范围内取值。</p>
+<div class="code-container" data-rel="Dart"><figure class="iseeu highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">BoxConstraints(&#123;</span><br><span class="line">    <span class="keyword">this</span>.minWidth = <span class="number">0.0</span>,</span><br><span class="line">    <span class="keyword">this</span>.maxWidth = <span class="built_in">double</span>.infinity,</span><br><span class="line">    <span class="keyword">this</span>.minHeight = <span class="number">0.0</span>,</span><br><span class="line">    <span class="keyword">this</span>.maxHeight = <span class="built_in">double</span>.infinity,</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//固定尺寸约束</span></span><br><span class="line">BoxConstraints.tight(Size(<span class="number">200</span>, <span class="number">100</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">//单独约束</span></span><br><span class="line">BoxConstraints.tightFor(width: <span class="number">200</span>); <span class="comment">// 宽度固定200，高度无约束</span></span><br><span class="line">BoxConstraints.tightFor(height: <span class="number">100</span>); <span class="comment">// 高度固定100，宽度无约束</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//宽松约束</span></span><br><span class="line"><span class="comment">//子Widget可以在0~size范围内自由取值，默认自适应内容</span></span><br><span class="line">BoxConstraints.loose(<span class="keyword">const</span> Size(<span class="number">200</span>, <span class="number">100</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">//充满约束</span></span><br><span class="line"><span class="comment">//子Widget会充满父节点给的最大可用空间</span></span><br><span class="line">BoxConstraints.expand(); <span class="comment">// 充满父节点所有可用空间</span></span><br><span class="line">BoxConstraints.expand(width: <span class="number">300</span>); <span class="comment">// 宽度充满，高度固定300</span></span><br></pre></td></tr></table></figure></div>
+
+<h1 id="-8"><a href="#-8" class="headerlink" title=""></a></h1><h2 id="child"><a href="#child" class="headerlink" title="child"></a>child</h2><p>实现套娃的重要参数。<br>里面可以放任何Widget，几乎是最最常用的参数。</p>
+<div class="code-container" data-rel="Dart"><figure class="iseeu highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Container(</span><br><span class="line">    padding: EdgeInsets.symmetric(vertical: <span class="number">50</span>),</span><br><span class="line">    color: Colors.red,</span><br><span class="line">    child: </span><br><span class="line">      Container(color: Colors.blue),</span><br><span class="line">    );</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="续二-孩子"><a href="#续二-孩子" class="headerlink" title="续二.孩子"></a>续二.孩子</h1><p>在一般的组件里只能套一个孩子。</p>
+<div class="code-container" data-rel="Dart"><figure class="iseeu highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Container(</span><br><span class="line">  child: Container(),</span><br><span class="line">);</span><br></pre></td></tr></table></figure></div>
+<p>为了能实现多个孩子嵌套，则需要Row和Column的帮助。</p>
+<div class="code-container" data-rel="Dart"><figure class="iseeu highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">Container(</span><br><span class="line">  child: Row(</span><br><span class="line">    children: [</span><br><span class="line">      Container(), </span><br><span class="line">      Container(), </span><br><span class="line">      Container()</span><br><span class="line">    ]</span><br><span class="line">  ),</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 相互组合能做出各种排布</span></span><br><span class="line">Container(</span><br><span class="line">  child: Row(</span><br><span class="line">    children: [</span><br><span class="line">      Container(),</span><br><span class="line">      Column(</span><br><span class="line">        children: [</span><br><span class="line">          Container(), </span><br><span class="line">          Container(), </span><br><span class="line">          Container()</span><br><span class="line">          ]</span><br><span class="line">        ),</span><br><span class="line">      Container(),</span><br><span class="line">    ],</span><br><span class="line">  ),</span><br><span class="line">);</span><br></pre></td></tr></table></figure></div>
+
+		</div>
+
+		
+		<div class="post-copyright-info w-full my-8 px-2 sm:px-6 md:px-8">
+			<div class="article-copyright-info-container">
+    <ul>
+        <li><strong>Title:</strong> flutter学习</li>
+        <li><strong>Author:</strong> Anrola</li>
+        <li><strong>Created at
+                :</strong> 2026-08-08 15:12:32</li>
+        
+            <li>
+                <strong>Updated at
+                    :</strong> 2026-08-13 18:12:31
+            </li>
+        
+        <li>
+            <strong>Link:</strong> https://redefine.ohevan.com/2026/08/08/flutter-learn-1/
+        </li>
+        <li>
+            <strong>
+                License:
+            </strong>
+            
+
+            
+                This work is licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0">CC BY-NC-SA 4.0</a>.
+            
+        </li>
+    </ul>
+</div>
+
+		</div>
+		
+
+		
+		<ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/flutter/">#flutter</a>&nbsp;
+			</li>
+			
+		</ul>
+		
+
+		
+
+		
+		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			
+			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="next" rel="next" href="/2026/08/06/git-usage-2/">
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">Hexo 个人博客上传大文件时出错</span>
+						<span class="post-nav-item">Next posts</span>
+					</span>
+					<span class="right arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-right"></i>
+					</span>
+				</a>
+			</div>
+			
+		</div>
+		
+
+
+		
+	</div>
+
+	
+	<div class="toc-content-container">
+		<div class="post-toc-wrap">
+	<div class="post-toc">
+		<div class="toc-title">On this page</div>
+		<div class="page-title">flutter学习</div>
+		<ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%9B%B6-%E9%97%A8"><span class="nav-text">零.门</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80-%E4%BD%A0%E5%A5%BD%E4%B8%96%E7%95%8C"><span class="nav-text">一.你好世界</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-text"></span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C-StatelessWidget%EF%BC%88%E6%97%A0%E7%8A%B6%E6%80%81%E7%AA%97%E5%8F%A3%EF%BC%89"><span class="nav-text">二.StatelessWidget（无状态窗口）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89-%E5%87%A0%E7%A7%8D%E5%9F%BA%E7%A1%80%E7%9A%84Widget"><span class="nav-text">三.几种基础的Widget</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Container"><span class="nav-text">Container</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#-1"><span class="nav-text"></span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Column"><span class="nav-text">Column</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Row"><span class="nav-text">Row</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Scaffold"><span class="nav-text">Scaffold</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TextField"><span class="nav-text">TextField</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Checkbox"><span class="nav-text">Checkbox</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Switch"><span class="nav-text">Switch</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Slider"><span class="nav-text">Slider</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TextButton"><span class="nav-text">TextButton</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ElevatedButton"><span class="nav-text">ElevatedButton</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IconButton"><span class="nav-text">IconButton</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SegmentedButton"><span class="nav-text">SegmentedButton</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Badge"><span class="nav-text">Badge</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SnackBar"><span class="nav-text">SnackBar</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%AD%E4%B8%80-%E5%90%84%E7%A7%8D%E5%B1%9E%E6%80%A7"><span class="nav-text">续一.各种属性</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#alignment"><span class="nav-text">alignment</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#key"><span class="nav-text">key</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#padding-%E5%92%8C-margin"><span class="nav-text">padding 和 margin</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#-2"><span class="nav-text"></span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#-3"><span class="nav-text"></span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#-4"><span class="nav-text"></span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#-5"><span class="nav-text"></span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#color"><span class="nav-text">color</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#isAntiAlias"><span class="nav-text">isAntiAlias</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#decoration-%E5%92%8C-foregroundDecoration"><span class="nav-text">decoration 和 foregroundDecoration</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#-6"><span class="nav-text"></span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#-7"><span class="nav-text"></span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#width-%E5%92%8C-height"><span class="nav-text">width 和 height</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#constraints"><span class="nav-text">constraints</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#-8"><span class="nav-text"></span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#child"><span class="nav-text">child</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%AD%E4%BA%8C-%E5%AD%A9%E5%AD%90"><span class="nav-text">续二.孩子</span></a></li></ol>
+
+	</div>
+</div>
+	</div>
+	
+</div>
+
+			</div>
+
+			
+		</div>
+
+		<div class="main-content-footer">
+			<footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2022</span>
+              -
+            
+            2026&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">Anrola</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        5 posts in total
+                    </span>
+                    
+                </p>
+            
+        </div>
+        
+            <script data-swup-reload-script src="https://cn.vercount.one/js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">VISITOR COUNT</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">TOTAL PAGE VIEWS</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.9.0</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+		</div>
+	</div>
+
+	
+	<div class="post-tools">
+		<div class="post-tools-container">
+	<ul class="article-tools-list">
+		<!-- TOC aside toggle -->
+		
+		<li class="right-bottom-tools page-aside-toggle">
+			<i class="fa-regular fa-outdent"></i>
+		</li>
+		
+
+		<!-- go comment -->
+		
+	</ul>
+</div>
+	</div>
+	
+
+	<div class="right-side-tools-container">
+		<div class="side-tools-container">
+	<ul class="hidden-tools-list">
+		<li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-plus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-minus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+			<i class="fa-regular fa-moon"></i>
+		</li>
+
+		<!-- rss -->
+		
+
+		
+
+		<li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+			<i class="fa-regular fa-arrow-down"></i>
+		</li>
+	</ul>
+
+	<ul class="visible-tools-list">
+		<li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+			<i class="fa-regular fa-cog fa-spin"></i>
+		</li>
+		
+		<li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+			<i class="arrow-up fas fa-arrow-up"></i>
+			<span class="percent"></span>
+		</li>
+		
+		
+	</ul>
+</div>
+	</div>
+
+	<div class="image-viewer-container" role="dialog" aria-modal="true" aria-label="Image viewer">
+	<button class="image-viewer-close" type="button" aria-label="Close">
+		<i class="fa-solid fa-xmark"></i>
+	</button>
+	<button class="image-viewer-prev" type="button" aria-label="Prev">
+		<i class="fa-solid fa-chevron-left"></i>
+	</button>
+	<div class="image-viewer-frame">
+		<img src="" alt="">
+	</div>
+	<div class="image-viewer-exif-panel hidden absolute left-1/2 bottom-20 -translate-x-1/2 w-[min(92vw,420px)] max-h-[60vh] overflow-hidden rounded-2xl bg-background-color-transparent-80 p-4 text-left shadow-redefine-flat backdrop-blur-md" role="dialog" aria-label="EXIF" aria-hidden="true">
+		<div class="flex items-center justify-between mb-3">
+			<span class="text-sm font-semibold text-first-text-color">EXIF</span>
+			<button class="image-viewer-exif-close flex h-8 w-8 items-center justify-center rounded-full bg-background-color-transparent-80 text-first-text-color transition hover:bg-background-color-transparent-40" type="button" aria-label="Close">
+				<i class="fa-solid fa-xmark text-[0.65rem]"></i>
+			</button>
+		</div>
+		<div class="image-viewer-exif-cards grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[50vh] overflow-y-auto pr-1 scrollbar-hide"></div>
+		<template class="image-viewer-exif-card-template">
+			<div class="rounded-lg bg-background-color-transparent-40 px-3 py-2">
+				<div class="image-viewer-exif-card-header flex items-center gap-2 mb-1">
+					<i class="image-viewer-exif-card-icon fa-solid fa-circle-info text-xs text-third-text-color"></i>
+					<div class="image-viewer-exif-card-title text-xs font-semibold text-first-text-color"></div>
+				</div>
+				<div class="image-viewer-exif-card-items flex flex-col gap-1"></div>
+			</div>
+		</template>
+	</div>
+	<button class="image-viewer-exif-toggle flex items-center gap-2 hidden absolute left-1/2 bottom-6 -translate-x-1/2 rounded-full border border-border-color bg-background-color-transparent-80 px-4 py-2 text-first-text-color backdrop-blur-md transition hover:bg-background-color-transparent-40" type="button" aria-label="EXIF" aria-expanded="false">
+		<i class="fa-solid fa-circle-info text-xs"></i>
+		<span class="text-xs font-semibold uppercase tracking-wider">EXIF</span>
+	</button>
+	<button class="image-viewer-next" type="button" aria-label="Next">
+		<i class="fa-solid fa-chevron-right"></i>
+	</button>
+</div>
+
+
+	
+
+</main>
+
+
+
+<script src="/js/build/libs/Swup.min.js"></script>
+
+<script src="/js/build/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/build/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    window.swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+
+    window.dispatchEvent(
+        new CustomEvent("redefine:swup:ready", {
+            detail: {
+                swup: window.swup,
+            },
+        }),
+    );
+</script>
+
+
+
+
+	
+<script src="/js/build/main.js" type="module"></script>
+
+
+
+    
+<script src="/js/build/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+
+
+
+  
+<script src="/js/build/libs/Typed.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+<script src="/js/build/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+
+	
+	<div id="aplayer"></div>
+
+<script src="/js/build/libs/APlayer.min.js"></script>
+
+
+<script src="/js/build/plugins/aplayer.js"></script>
+
+
+	
+</body>
+
+</html>
