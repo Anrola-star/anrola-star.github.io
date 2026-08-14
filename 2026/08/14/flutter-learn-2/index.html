@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    
+    <meta name="author" content="Anrola">
+    
+    <!-- Completely eliminate flash of wrong theme -->
+    <script>
+        (function() {
+            const THEME_KEY = "REDEFINE-THEME-STATUS";
+            const DARK = "dark", LIGHT = "light";
+            
+            // Get preferred theme
+            function getTheme() {
+                try {
+                    const saved = localStorage.getItem(THEME_KEY);
+                    if (saved) {
+                        const { isDark } = JSON.parse(saved);
+                        return isDark ? DARK : LIGHT;
+                    }
+                } catch (e) {}
+                
+                return matchMedia("(prefers-color-scheme: dark)").matches ? DARK : LIGHT;
+            }
+            
+            // Apply theme to document
+            function applyTheme(theme) {
+                const isDark = theme === DARK;
+                const root = document.documentElement;
+                
+                // Set classes for compatibility
+                root.classList.add(theme);
+                root.classList.remove(isDark ? LIGHT : DARK);
+                root.style.colorScheme = theme;
+            }
+            
+            // Initial application
+            const theme = getTheme();
+            applyTheme(theme);
+            
+            // Listen for system preference changes
+            matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ({ matches }) => {
+                // Only update if using system preference (no localStorage entry)
+                if (!localStorage.getItem(THEME_KEY)) {
+                    applyTheme(matches ? DARK : LIGHT);
+                }
+            });
+            
+            // Set body classes ASAP (before DOMContentLoaded)
+            (function() {
+                const addBodyClass = () => {
+                    const b = document.body;
+                    if (!b) return false;
+                    b.classList.add(theme + "-mode");
+                    return true;
+                };
+
+                // Try immediately
+                if (addBodyClass()) return;
+
+                // Observe until body exists
+                const mo = new MutationObserver(() => {
+                    if (addBodyClass()) mo.disconnect();
+                });
+                mo.observe(document.documentElement, { childList: true, subtree: true });
+            })();
+        })();
+    </script>
+    
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="https://anrola-star.github.io/2026/08/14/flutter-learn-2/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+    
+        
+        <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flutter桌面端窗口控制——window_manager插件的使用与跨平台问题">
+<meta property="og:url" content="https://anrola-star.github.io/2026/08/14/flutter-learn-2/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://anrola-star.github.io/images/redefine-og.webp">
+<meta property="article:published_time" content="2026-08-14T04:09:52.767Z">
+<meta property="article:modified_time" content="2026-08-14T08:12:44.190Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="flutter">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://anrola-star.github.io/images/redefine-og.webp">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/myIcon.jpg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/myIcon.jpg">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/myIcon.jpg">
+    <!--- Page Info-->
+    
+    <title>
+        
+            Flutter桌面端窗口控制——window_manager插件的使用与跨平台问题 | Anrola博客——锐意学习中...
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/css/build/tailwind.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+    
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"anrola-star.github.io","root":"/","language":"en"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"delete_mask":false,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"github","dark":"vs2015"},"font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":{"enable":true,"default":"cc_by_nc_sa"},"lazyload":true,"pangu_js":false,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":{"enable":false,"custom_message":null},"side_tools":{"gear_rotation":true,"auto_expand":false},"open_graph":{"enable":true,"image":"/images/redefine-og.webp","description":"Hexo Theme Redefine, Redefine Your Hexo Journey."},"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/backGround_light.jpg","dark":"/images/backGround_dark.jpg"},"title":"下雨后的街道，闪烁着星光！⭐","subtitle":{"text":[""],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#C21CFF","dark":"#FF1C59"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":"ture","style":"default","links":[{"icon":"fa-brands fa-github","url":"https://github.com/Anrola-star"},{"icon":"fa-brands fa-twitter","url":null},{"icon":"fa-solid fa-at","url":"zxc2647162425@foxmail.com"},{"icon":"fa-brands fa-telegram","url":null},{"icon":"/images/afdlogo-发电紫.png","url":"https://www.ifdian.net/a/anrola?utm_source=copylink&utm_medium=link"}],"qrs":[{"icon":"fa-brands fa-weixin","qr":null},{"icon":"/images/custom-icon.svg","qr":null}]}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":"ture","type":"fixed","audios":[{"name":"白波トップウォーター","artist":"サカナクション","url":"\\music\\07 Shiranami Top Water.mp3","cover":null,"lrc":null},{"name":"潮汐","artist":"Vanguard Sound/赛博传媒-2064","url":"\\music\\潮汐.flac"}]},"mermaid":{"enable":false,"version":"11.4.1","theme":{"light":"default","dark":"dark"}}},"version":"2.9.0","navbar":{"auto_hide":"ture","color":{"left":"#f78736","right":"#367df7","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"标签":{"path":"/tags/","icon":"fa-regular fa-tags"},"分类":{"icon":"fa-regular fa-folder","path":"/categories/"},"说说":{"icon":null,"path":"/essays/"},"赞助我":{"icon":null,"path":"https://www.ifdian.net/a/anrola?utm_source=copylink&utm_medium=link"}},"search":{"enable":false,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur","masonry":{"batch_size":12,"initial_batch_size":24}},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"show_on_mobile":true,"links":null},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footer":{"runtime":true,"icon":"<i class=\"fa-solid fa-heart fa-beat\" style=\"--fa-animation-duration: 0.5s; color: #f54545\"></i>","start":"2022/8/17 11:45:14","statistics":true,"customize":null,"icp":{"enable":false,"number":null,"url":null}},"footerStart":"2022/8/17 11:45:14","mermaid":{"style":{"light":"default","dark":"dark"}}};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.i18n = {"search":"Search...","toc":"On this page","prev":"Prev","next":"Next","prev_posts":"Prev posts","next_posts":"Next posts","page":"Page %d","recent_posts":"Recent Posts","share":"Share","powered_by":"POWERED BY %s","theme":"THEME","rss_feed":"RSS Feed","category":"Category","categories":"Categories","tag":"Tag","tags":"Tags","post":"Post","posts":"Posts","tagcloud":"Tag Cloud","comment":"Comment","comments":"Comments","home":"Home","archive":"Archive","archives":"Archives","top":"TOP","sticky":"Sticky","go-back-home":"Go Back Home","masonry_loading":"Loading photos...","image_viewer":"Image viewer","close":"Close","exif":{"title":"EXIF","cards":{"camera":"Camera","lens":"Lens","exposure":"Exposure","other":"Other"},"fields":{"make":"Brand","model":"Model","date_taken":"Date taken","lens_model":"Lens","focal_length":"Focal length","focus_mode":"Focus mode","shutter":"Shutter","aperture":"Aperture","iso":"ISO","exposure_program":"Exposure program","exposure_compensation":"Exposure compensation","metering_mode":"Metering mode","flash":"Flash","white_balance":"White balance","latitude":"Latitude","longitude":"Longitude","altitude":"Altitude"},"status":{"loading":"Loading...","no_exif":"No EXIF available","library_missing":"EXIF library not loaded","image_source_missing":"Image source unavailable","unavailable":"EXIF unavailable (blocked by CORS or missing metadata)","flag_unavailable":"EXIF unavailable"}},"about":"About","changelog":"Changelog","links":"Links","link":"Link","friends":"Friends","friend":"Friend","timeline":"Timeline","shuoshuo":"Shuoshuo","bookmarks":"Bookmarks","site_uv":"VISITOR COUNT","site_pv":"TOTAL PAGE VIEWS","read_more":"Read more","wordcount":"Words","min2read":"Mins","status":"Status","runtime":"Blog up for","days":"days","hours":"hrs","minutes":"Min","seconds":"Sec","optimized_by":"and Optimized by Evan","rights":"All Rights Reserved","site_posts":"%s posts in total","site_wordcount":"%s words in total","copyright":{"author":"Author","title":"Title","link":"Link","create_time":"Created at","update_time":"Updated at","license_title":"License","license_content":"This work is licensed under %s.","all_rights_reserved":"All Rights Reserved &#169; %s","public_domain":"This work is in the public domain."},"ago":{"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"},"create_time":"Created","update_time":"Updated","expired":"This post is written %s days ago, and the content may not be up to date."};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+
+<body>
+	<div class="progress-bar-container">
+	
+
+	
+	<span class="pjax-progress-bar"></span>
+	<!--        <span class="swup-progress-icon">-->
+	<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+	<!--        </span>-->
+	
+</div>
+
+<main class="page-container" id="swup">
+
+	
+
+	<div class="main-content-container flex flex-col justify-between min-h-dvh">
+		<div class="main-content-header">
+			<header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                Anrola博客——锐意学习中...
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    HOME
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/tags/"
+                                        >
+                                    <i class="fa-regular fa-tags fa-fw"></i>
+                                    标签
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/categories/"
+                                        >
+                                    <i class="fa-regular fa-folder fa-fw"></i>
+                                    分类
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/essays/"
+                                        >
+                                    
+                                    说说
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   target="_blank" rel="noopener" href="https://www.ifdian.net/a/anrola?utm_source=copylink&amp;utm_medium=link"
+                                        >
+                                    
+                                    赞助我
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/"
+                        >
+                            <span>
+                                HOME
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/tags/"
+                        >
+                            <span>
+                                标签
+                            </span>
+                            
+                                <i class="fa-regular fa-tags fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/categories/"
+                        >
+                            <span>
+                                分类
+                            </span>
+                            
+                                <i class="fa-regular fa-folder fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/essays/"
+                        >
+                            <span>
+                                说说
+                            </span>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           target="_blank" rel="noopener" href="https://www.ifdian.net/a/anrola?utm_source=copylink&amp;utm_medium=link"
+                        >
+                            <span>
+                                赞助我
+                            </span>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+
+            
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">6</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">1</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">6</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+		</div>
+
+		<div class="main-content-body transition-fade-up">
+			
+
+			<div class="main-content">
+				<div class="post-page-container flex relative justify-between box-border w-full h-full">
+	<div class="article-content-container">
+
+		<div class="article-title relative w-full">
+			
+			<div class="w-full flex items-center pt-6 justify-start">
+				<h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">Flutter桌面端窗口控制——window_manager插件的使用与跨平台问题</h1>
+			</div>
+			
+		</div>
+
+		
+		<div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+			<div class="avatar w-[46px] h-[46px] shrink-0 rounded-medium border border-border-color p-px">
+				<img src="/images/myIcon.jpg">
+			</div>
+			<div class="info flex flex-col justify-between">
+				<div class="author flex items-center">
+					<span class="name text-default-text-color text-lg font-semibold">Anrola</span>
+					
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv1</span>
+					
+				</div>
+				<div class="meta-info">
+					<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2026-08-14 12:09:52</span>
+        <span class="mobile">2026-08-14 12:09:52</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2026-08-14 16:12:44</span>
+            <span class="mobile">2026-08-14 16:12:44</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/flutter/">flutter</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+				</div>
+			</div>
+		</div>
+		
+
+		
+
+
+		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+			<p>Flutter有以其出色的跨平台能力，但是在window平台特有的窗口控制、标题栏自定义、系统交互等需求，却需要额外的库来支持。如果需要更沉浸、更个性化的体验，熟悉<strong>window_manager</strong>的使用就很重要了。</p>
+<h1 id="1-核心功能"><a href="#1-核心功能" class="headerlink" title="1.核心功能"></a>1.核心功能</h1><p>使用<strong>window_manager</strong>你将可以做到：</p>
+<ul>
+<li>移除系统标题栏。</li>
+<li>绘制一套风格独特的标题栏和控制按钮，与整体UI设计语言保持一致。</li>
+<li>控制窗口的初始位置、大小、最小&#x2F;最大尺寸限制。</li>
+<li>实现一些高级交互，如窗口置顶、监听窗口状态变化（获得焦点、失去焦点、最大化、最小化等）。</li>
+<li>定义非标准区域（比如应用内的某个工具栏）也能拖动窗口。</li>
+</ul>
+<h1 id="2-安装"><a href="#2-安装" class="headerlink" title="2.安装"></a>2.安装</h1><p>在你的flutter项目的<strong>pubspec.yaml</strong>文件里添加依赖。</p>
+<div class="code-container" data-rel="Yaml"><figure class="iseeu highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">dependencies:</span> </span><br><span class="line">    <span class="attr">window_manager:</span> <span class="string">^0.5.2</span></span><br></pre></td></tr></table></figure></div>
+<p>这里版本号不一定是最新的，可以到<a class="link"   target="_blank" rel="noopener" href="https://pub.dev/packages/window_manager" >这里<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a>查看最新版本。<br>当然你也可以写<code>window_manager: ^last_version</code>获取最新版本，但是不建议。</p>
+<h1 id="3-使用"><a href="#3-使用" class="headerlink" title="3.使用"></a>3.使用</h1><p>按照官方文档，添加如下代码到 lib&#x2F;main.dart：</p>
+<div class="code-container" data-rel="Dart"><figure class="iseeu highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;package:flutter/material.dart&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;package:window_manager/window_manager.dart&#x27;</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//注意加async</span></span><br><span class="line"><span class="keyword">void</span> main() <span class="keyword">async</span> &#123;</span><br><span class="line"></span><br><span class="line">  <span class="comment">///<span class="language-markdown">————以下部分放在runApp前</span></span></span><br><span class="line"></span><br><span class="line">  WidgetsFlutterBinding.ensureInitialized();</span><br><span class="line">  <span class="comment">// 必须加上这一行。</span></span><br><span class="line">  <span class="keyword">await</span> windowManager.ensureInitialized();</span><br><span class="line"></span><br><span class="line">  <span class="comment">//window窗口设置</span></span><br><span class="line">  WindowOptions windowOptions = WindowOptions(</span><br><span class="line">    size: Size(<span class="number">800</span>, <span class="number">600</span>),  <span class="comment">//长宽</span></span><br><span class="line">    center: <span class="keyword">true</span>,  <span class="comment">//居中</span></span><br><span class="line">    backgroundColor: Colors.transparent,  <span class="comment">//背景色</span></span><br><span class="line">    skipTaskbar: <span class="keyword">false</span>,  <span class="comment">//是否显示在任务栏</span></span><br><span class="line">    titleBarStyle: TitleBarStyle.hidden,  <span class="comment">//系统标题栏</span></span><br><span class="line">  );</span><br><span class="line"></span><br><span class="line">  <span class="comment">//等待设置完成</span></span><br><span class="line">  windowManager.waitUntilReadyToShow(windowOptions, () <span class="keyword">async</span> &#123;</span><br><span class="line">    <span class="keyword">await</span> windowManager.<span class="keyword">show</span>();</span><br><span class="line">    <span class="keyword">await</span> windowManager.focus();</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="comment">//————以上部分放在runApp前</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  runApp(MyApp());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>此时你就能得到一个无系统标题栏的窗口了。</p>
+<h1 id="4-跨平台问题"><a href="#4-跨平台问题" class="headerlink" title="4.跨平台问题"></a>4.跨平台问题</h1><p>如果你使用web端运行上述例子，会发现结果一片空白。<br>因为windowManager自带<code>dart.io</code>，但是web端是不支持<code>dart.io</code>的。<br>为此我们需要按情况动态导入。</p>
+<p>创建两个新dart文件：<br><strong>desktop_setup.dar</strong></p>
+<div class="code-container" data-rel="Dart"><figure class="iseeu highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">&#x27;dart:io&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;package:flutter/material.dart&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;package:window_manager/window_manager.dart&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//window平台执行此函数</span></span><br><span class="line">Future&lt;<span class="keyword">void</span>&gt; setupDesktop() <span class="keyword">async</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (Platform.isWindows) &#123;</span><br><span class="line">    WidgetsFlutterBinding.ensureInitialized();</span><br><span class="line">    <span class="keyword">await</span> windowManager.ensureInitialized();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> windowOptions = WindowOptions(</span><br><span class="line">      size: Size(<span class="number">800</span>, <span class="number">600</span>),</span><br><span class="line">      center: <span class="keyword">true</span>,</span><br><span class="line">      backgroundColor: Colors.transparent,</span><br><span class="line">      skipTaskbar: <span class="keyword">false</span>,</span><br><span class="line">      titleBarStyle: TitleBarStyle.hidden,</span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">await</span> windowManager.waitUntilReadyToShow(windowOptions, () <span class="keyword">async</span> &#123;</span><br><span class="line">      <span class="keyword">await</span> windowManager.<span class="keyword">show</span>();</span><br><span class="line">      <span class="keyword">await</span> windowManager.focus();</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>desktop_setup_stub.dart</strong></p>
+<div class="code-container" data-rel="Dart"><figure class="iseeu highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//非window平台执行此函数</span></span><br><span class="line">Future&lt;<span class="keyword">void</span>&gt; setupDesktop() <span class="keyword">async</span> &#123;&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+<p><br>把我们的main.dart改为：</p>
+<div class="code-container" data-rel="Dart"><figure class="iseeu highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 条件导入，解决web平台不支持window_manager的问题</span></span><br><span class="line"><span class="comment">// 在window平台导入desktop_setup(包含window_manager和实际的setupDesktop函数)</span></span><br><span class="line"><span class="comment">// 在web平台时导入desktop_setup_stub(不包含window_manager)</span></span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;package:desktop_setup.dart&#x27;</span></span><br><span class="line">    <span class="keyword">if</span> (dart.<span class="keyword">library</span>.html) <span class="string">&#x27;package:desktop_setup_stub.dart&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> main() <span class="keyword">async</span> &#123;</span><br><span class="line"></span><br><span class="line">  <span class="comment">//web平台时为空函数。</span></span><br><span class="line">  setupDesktop();</span><br><span class="line"></span><br><span class="line">  runApp(MyApp());</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+
+<p>这样我们就完成了两个平台的兼容了。</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">类似的也有</span><br><span class="line">```dart.library.io```，在window、ios、android、linux和mac都会为true。</span><br><span class="line">```dart.library.js```在浏览器和js环境会为true。</span><br><span class="line"></span><br><span class="line">如果想做更细致的平台判断，还可以用Platform来判断平台，但是注意Platform需要```dart.io```，会导致与web端不兼容，所以也需要参照上面的方法做兼容。</span><br><span class="line">``` dart</span><br><span class="line">Platform.isAndroid;</span><br><span class="line">Platform.isWindows;</span><br><span class="line">Platform.isIOS;</span><br></pre></td></tr></table></figure></div>
+
+
+<h1 id="5-自制标题栏"><a href="#5-自制标题栏" class="headerlink" title="5.自制标题栏"></a>5.自制标题栏</h1><p>由于我们隐藏了系统的标题栏，所以需要自制一个标题栏。<br>关于标题栏的样式百花齐放，flutter功能很强大所以完全可以发挥想象力，不用拘泥于常见的标题栏。</p>
+<p>但是我的例子依旧会仿照常见的标题栏。</p>
+<p><br>我们利用Material的<strong>Scaffold</strong>轻松设置标题栏。</p>
+<div class="code-container" data-rel="Dart"><figure class="iseeu highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">&#x27;package:desktop_setup.dart&#x27;</span></span><br><span class="line">    <span class="keyword">if</span> (dart.<span class="keyword">library</span>.html) <span class="string">&#x27;package:desktop_setup_stub.dart&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> main() <span class="keyword">async</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//web平台时为空函数。</span></span><br><span class="line">    setupDesktop();</span><br><span class="line"></span><br><span class="line">    runApp(</span><br><span class="line">        MaterialApp(</span><br><span class="line">            home: Scaffold(</span><br><span class="line">                appBar: createTitleBar(), <span class="comment">//自制标题栏</span></span><br><span class="line">                body: MyApp()</span><br><span class="line">            ),</span><br><span class="line">        )</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Widget createTitleBar()&#123;</span><br><span class="line">    <span class="keyword">return</span> Container(</span><br><span class="line">      height: <span class="number">40</span>,</span><br><span class="line">      color: Colors.grey[<span class="number">900</span>], <span class="comment">// 背景色</span></span><br><span class="line">      child: Row(</span><br><span class="line">        children: [</span><br><span class="line">          <span class="comment">// 可拖动的空白区域</span></span><br><span class="line">          Expanded(</span><br><span class="line">            child: GestureDetector(</span><br><span class="line">              behavior: HitTestBehavior.translucent,</span><br><span class="line">              <span class="comment">// 按住拖动</span></span><br><span class="line">              onPanDown: (_) =&gt; windowManager.startDragging(),</span><br><span class="line">              child: Container(</span><br><span class="line">                alignment: Alignment.centerLeft,</span><br><span class="line">                padding: <span class="keyword">const</span> EdgeInsets.only(left: <span class="number">16</span>),</span><br><span class="line">                child: <span class="keyword">const</span> Text(</span><br><span class="line">                  <span class="string">&#x27;我的应用标题&#x27;</span>,</span><br><span class="line">                  style: TextStyle(color: Colors.white, fontSize: <span class="number">14</span>),</span><br><span class="line">                ),</span><br><span class="line">              ),</span><br><span class="line">            ),</span><br><span class="line">          ),</span><br><span class="line">          <span class="comment">// 按钮区域</span></span><br><span class="line">          IconButton(</span><br><span class="line">            icon: <span class="keyword">const</span> Icon(Icons.remove, size: <span class="number">18</span>, color: Colors.white),</span><br><span class="line">            onPressed: () =&gt; windowManager.minimize(),</span><br><span class="line">          ),</span><br><span class="line">          IconButton(</span><br><span class="line">            icon: <span class="keyword">const</span> Icon(Icons.crop_square, size: <span class="number">16</span>, color: Colors.white),</span><br><span class="line">            onPressed: () =&gt; windowManager.maximize(), <span class="comment">//没写还原逻辑</span></span><br><span class="line">          ),</span><br><span class="line">          IconButton(</span><br><span class="line">            icon: <span class="keyword">const</span> Icon(Icons.close, size: <span class="number">18</span>, color: Colors.white),</span><br><span class="line">            onPressed: () =&gt; windowManager.close(),</span><br><span class="line">          ),</span><br><span class="line">        ],</span><br><span class="line">      ),</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p><br>但是问题来了，我们并不希望web端和手机端出现这个标题栏.<br>所以老办法：<br><br><strong>title_bar.dart</strong></p>
+<div class="code-container" data-rel="Dart"><figure class="iseeu highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">&#x27;dart:io&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;package:flutter/material.dart&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;package:window_manager/window_manager.dart&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//注意这里判断，只有在window平台时才返回标题栏，否则返回空。</span></span><br><span class="line"><span class="comment">//如果需要其他平台可以自行添加</span></span><br><span class="line">PreferredSizeWidget? createTitleBar() &#123;</span><br><span class="line">  <span class="keyword">if</span> (!Platform.isWindows) <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">const</span> _CustomTitleBar();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//下面就是标题栏的逻辑了。</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">_CustomTitleBar</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> <span class="keyword">implements</span> <span class="title">PreferredSizeWidget</span> </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> _CustomTitleBar(&#123;<span class="keyword">super</span>.key&#125;);</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Size <span class="keyword">get</span> preferredSize =&gt; <span class="keyword">const</span> Size.fromHeight(<span class="number">40.0</span>);</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> Container(</span><br><span class="line">      height: <span class="number">40</span>,</span><br><span class="line">      color: Colors.grey[<span class="number">900</span>], <span class="comment">// 背景色</span></span><br><span class="line">      child: Row(</span><br><span class="line">        children: [</span><br><span class="line">          <span class="comment">// 可拖动的空白区域</span></span><br><span class="line">          Expanded(</span><br><span class="line">            child: GestureDetector(</span><br><span class="line">              behavior: HitTestBehavior.translucent,</span><br><span class="line">              <span class="comment">// 按住拖动</span></span><br><span class="line">              onPanDown: (_) =&gt; windowManager.startDragging(),</span><br><span class="line">              child: Container(</span><br><span class="line">                alignment: Alignment.centerLeft,</span><br><span class="line">                padding: <span class="keyword">const</span> EdgeInsets.only(left: <span class="number">16</span>),</span><br><span class="line">                child: <span class="keyword">const</span> Text(</span><br><span class="line">                  <span class="string">&#x27;我的应用标题&#x27;</span>,</span><br><span class="line">                  style: TextStyle(color: Colors.white, fontSize: <span class="number">14</span>),</span><br><span class="line">                ),</span><br><span class="line">              ),</span><br><span class="line">            ),</span><br><span class="line">          ),</span><br><span class="line">          <span class="comment">// 按钮区域</span></span><br><span class="line">          IconButton(</span><br><span class="line">            icon: <span class="keyword">const</span> Icon(Icons.remove, size: <span class="number">18</span>, color: Colors.white),</span><br><span class="line">            onPressed: () =&gt; windowManager.minimize(),</span><br><span class="line">          ),</span><br><span class="line">          IconButton(</span><br><span class="line">            icon: <span class="keyword">const</span> Icon(Icons.crop_square, size: <span class="number">16</span>, color: Colors.white),</span><br><span class="line">            onPressed: () =&gt; windowManager.maximize(),</span><br><span class="line">          ),</span><br><span class="line">          IconButton(</span><br><span class="line">            icon: <span class="keyword">const</span> Icon(Icons.close, size: <span class="number">18</span>, color: Colors.white),</span><br><span class="line">            onPressed: () =&gt; windowManager.close(),</span><br><span class="line">          ),</span><br><span class="line">        ],</span><br><span class="line">      ),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+<p><br><strong>title_bar_stub.dart</strong></p>
+<div class="code-container" data-rel="Dart"><figure class="iseeu highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">&#x27;package:flutter/material.dart&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 对于 Web 和移动端，直接返回 null</span></span><br><span class="line">PreferredSizeWidget? createTitleBar() =&gt; <span class="keyword">null</span>;</span><br></pre></td></tr></table></figure></div>
+<p><br>改造main.dart</p>
+<div class="code-container" data-rel="Dart"><figure class="iseeu highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 条件导入createTitleBar函数</span></span><br><span class="line"><span class="comment">// 仅在非web端导入实际的createTitleBar函数，</span></span><br><span class="line"><span class="comment">// createTitleBar函数内又会再判断一次Platform.isWindows，</span></span><br><span class="line"><span class="comment">// 确保只在合适的平台出现标题栏</span></span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;title_bar.dart&#x27;</span></span><br><span class="line">    <span class="keyword">if</span> (dart.<span class="keyword">library</span>.html) <span class="string">&#x27;title_bar_stub.dart&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> main() <span class="keyword">async</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//web平台时为空函数。</span></span><br><span class="line">    setupDesktop();</span><br><span class="line"></span><br><span class="line">    runApp(</span><br><span class="line">        MaterialApp(</span><br><span class="line">            home: Scaffold(</span><br><span class="line">                appBar: createTitleBar(), <span class="comment">//自制标题栏</span></span><br><span class="line">                body: MyApp()</span><br><span class="line">            ),</span><br><span class="line">        )</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h1 id="续一-WindowOptions的各种设置"><a href="#续一-WindowOptions的各种设置" class="headerlink" title="续一.WindowOptions的各种设置"></a>续一.WindowOptions的各种设置</h1><p><strong>alwaysOnTop</strong> → bool?<br>置顶</p>
+<p><strong>backgroundColor</strong> → Color?<br>背景色<br><strong>center</strong> → bool?<br>居中</p>
+<p><strong>fullScreen</strong> → bool?<br>全屏</p>
+<p><strong>maximumSize</strong> → Size?<br>最大尺寸</p>
+<p><strong>minimumSize</strong> → Size?<br>最小尺寸</p>
+<p><strong>size</strong> → Size?<br>尺寸</p>
+<p><strong>skipTaskbar</strong> → bool?<br>是否在任务栏显示</p>
+<p><strong>title</strong> → String?<br>标题</p>
+<p><strong>titleBarStyle</strong> → TitleBarStyle?<br>标题栏样式</p>
+<p><strong>windowButtonVisibility</strong> → bool?<br>窗口按钮可见度</p>
+<h1 id="续二-WindowManager的各种方法"><a href="#续二-WindowManager的各种方法" class="headerlink" title="续二.WindowManager的各种方法"></a>续二.WindowManager的各种方法</h1><p><strong>addListener(WindowListener listener)</strong> → void<br>添加监听器，监听器能监听非常多的状态。</p>
+<p><strong>removeListener(WindowListener listener)</strong> → void<br>移除监听器。</p>
+<p><strong>center({bool animate &#x3D; false})</strong> → Future&lt;void&gt;<br>移动窗口到中间。可开启动画。</p>
+<p><strong>ensureInitialized()</strong> → Future&lt;void&gt;<br>确认初始化完成。</p>
+<p><strong>waitUntilReadyToShow([WindowOptions? options, VoidCallback? callback])</strong> → Future&lt;void&gt;<br>等待设置完成且可以显示。</p>
+<p><strong>isVisible()</strong> → Future&lt;bool&gt;<br>能否可见。</p>
+<p><strong>isVisibleOnAllWorkspaces()</strong> → Future&lt;bool&gt;<br>是否在所有工作区可见。</p>
+<p><strong>setVisibleOnAllWorkspaces(bool visible, {bool? visibleOnFullScreen})</strong> → Future&lt;void&gt;<br>设置是否在所有工作区可见。</p>
+<p><strong>noSuchMethod(Invocation invocation)</strong> → dynamic<br>当访问不存在的方法或属性时调用。</p>
+<p><strong>popUpWindowMenu()</strong> → Future&lt;void&gt;<br>弹出窗口菜单。</p>
+<p><strong>setAlignment(Alignment alignment, {bool animate &#x3D; false})</strong> → Future&lt;void&gt;<br>按设定好的布局规则移动窗口到屏幕的某个地方。</p>
+<p><strong>setBackgroundColor(Color backgroundColor)</strong> → Future&lt;void&gt;<br>设置背景颜色。</p>
+<p><strong>setBrightness(Brightness brightness)</strong> → Future&lt;void&gt;<br>设置发光。</p>
+<p><strong>setIgnoreMouseEvents(bool ignore, {bool forward &#x3D; false})</strong> → Future&lt;void&gt;<br>设置窗口无视所有鼠标行为，</p>
+<p><strong>setProgressBar(double progress)</strong> → Future&lt;void&gt;<br>设置运行中条，0.0~1.0</p>
+<p><strong>startDragging()</strong> → Future&lt;void&gt;<br>开始拖动。</p>
+<p><strong>startResizing(ResizeEdge resizeEdge)</strong> → Future&lt;void&gt;<br>开始控制大小。</p>
+<hr>
+<p><strong>getId()</strong> → Future&lt;int&gt;<br>获取窗口id。</p>
+<p><strong>setBounds(Rect? bounds, {Offset? position, Size? size, bool animate &#x3D; false})</strong> → Future&lt;void&gt;<br>设置边界。</p>
+<p><strong>getBounds()</strong> → Future&lt;Rect&gt;<br>获取窗口的边界大小。</p>
+<p><strong>setAspectRatio(double aspectRatio)</strong> → Future&lt;void&gt;<br>设置比例。</p>
+<p><strong>getDevicePixelRatio()</strong> → double<br>获取设备像素比率。</p>
+<p><strong>setOpacity(double opacity)</strong> → Future&lt;void&gt;<br>设置透明度。</p>
+<p><strong>getOpacity()</strong> → Future&lt;double&gt;<br>获取窗口透明度，0.0~0.1。</p>
+<p><strong>setPosition(Offset position, {bool animate &#x3D; false})</strong> → Future&lt;void&gt;<br>设置窗口位置。</p>
+<p><strong>getPosition()</strong> → Future&lt;Offset&gt;<br>获取当前窗口的位置。</p>
+<p><strong>setSize(Size size, {bool animate &#x3D; false})</strong> → Future&lt;void&gt;<br>设置大小。</p>
+<p><strong>getSize()</strong> → Future&lt;Size&gt;<br>获取窗口宽高。</p>
+<p><strong>setTitle(String title)</strong> → Future&lt;void&gt;<br>设置标题。</p>
+<p><strong>getTitle()</strong> → Future&lt;String&gt;<br>获取窗口标题。</p>
+<p><strong>getTitleBarHeight()</strong> → Future&lt;int&gt;<br>获取标题栏高度。</p>
+<p><strong>setTitleBarStyle(TitleBarStyle titleBarStyle, {bool windowButtonVisibility &#x3D; true})</strong> → Future&lt;void&gt;<br>设置标题栏样式。</p>
+<hr>
+<p>#linux<br><strong>grabKeyboard()</strong> → Future&lt;bool&gt;<br>抓取键盘。</p>
+<p>#linux<br><strong>ungrabKeyboard()</strong> → Future&lt;bool&gt;<br>取消抓取键盘。</p>
+<hr>
+<p><strong>setAlwaysOnBottom(bool isAlwaysOnBottom)</strong> → Future&lt;void&gt;<br>设置永远置底。</p>
+<p><strong>setAlwaysOnTop(bool isAlwaysOnTop)</strong> → Future&lt;void&gt;<br>设置永远置顶。</p>
+<p><strong>isAlwaysOnBottom()</strong> → Future&lt;bool&gt;<br>是否永远置底。</p>
+<p><strong>isAlwaysOnTop()</strong> → Future&lt;bool&gt;<br>是否永远置顶。</p>
+<hr>
+<p><strong>show({bool inactive &#x3D; false})</strong> → Future&lt;void&gt;<br>显示并聚焦窗口。</p>
+<p><strong>hide()</strong> → Future&lt;void&gt;<br>隐藏窗口。</p>
+<p><strong>close()</strong> → Future&lt;void&gt;<br>尝试关闭窗口。</p>
+<p><strong>destroy()</strong> → Future&lt;void&gt;<br>强制关闭窗口。</p>
+<p><strong>setClosable(bool isClosable)</strong> → Future&lt;void&gt;<br>设置能否手动关闭。</p>
+<p><strong>isClosable()</strong> → Future&lt;bool&gt;<br>能否手动关闭。</p>
+<p><strong>setPreventClose(bool isPreventClose)</strong> → Future&lt;void&gt;<br>设置阻止关闭。</p>
+<p><strong>isPreventClose()</strong> → Future&lt;bool&gt;<br>关闭是否被阻止。</p>
+<p>#window<br><strong>dock({required DockSide side, required int width})</strong> → Future&lt;void&gt;<br>锁定到任务栏。</p>
+<p>#Windows<br><strong>undock()</strong> → Future&lt;bool&gt;<br>取消收入任务栏。</p>
+<p><strong>isDockable()</strong> → Future&lt;bool&gt;<br>能否锁定到任务栏。</p>
+<p><strong>isDocked()</strong> → Future&lt;DockSide?&gt;<br>是否已经锁定到任务栏。</p>
+<p><strong>setSkipTaskbar(bool isSkipTaskbar)</strong> → Future&lt;void&gt;<br>设置是否显示在任务栏。</p>
+<p><strong>isSkipTaskbar()</strong> → Future&lt;bool&gt;<br>是否开启了出现在任务栏。</p>
+<p><strong>setIcon(String iconPath)</strong> → Future&lt;void&gt;<br>设置任务栏图标。</p>
+<p><strong>setBadgeLabel([String? label])</strong> → Future&lt;void&gt;<br>设置任务栏标签。</p>
+<p><strong>focus()</strong> → Future<void><br>聚焦到窗口。</p>
+<p><strong>blur()</strong> → Future&lt;void&gt;<br>移除窗口聚焦。</p>
+<p><strong>isFocused()</strong> → Future&lt;bool&gt;<br>是否被聚焦。</p>
+<p><strong>setFullScreen(bool isFullScreen)</strong> → Future&lt;void&gt;<br>设置全屏。</p>
+<p><strong>isFullScreen()</strong> → Future&lt;bool&gt;<br>是否全屏。</p>
+<p><strong>setHasShadow(bool hasShadow)</strong> → Future&lt;void&gt;<br>设置阴影，windows平台下只对无边框生效。</p>
+<p><strong>hasShadow()</strong> → Future&lt;bool&gt;<br>窗口是否有阴影，在windows平台永远true除非窗口无边框。</p>
+<p><strong>setAsFrameless()</strong> → Future&lt;void&gt;<br>移除边框。删除窗口框架（标题栏、轮廓边框等），除Flutter视图之外的所有内容，可以调用setTitleBarStyle（TitleBarStyle.normal）或setTitleBar Style（title BarStyle.hidden）来恢复它。</p>
+<hr>
+<p><strong>setMaximizable(bool isMaximizable)</strong> → Future&lt;void&gt;<br>设置能否最大化。</p>
+<p><strong>setMaximumSize(Size size)</strong> → Future&lt;void&gt;<br>设置能否最大尺寸。</p>
+<p><strong>setMinimizable(bool isMinimizable)</strong> → Future&lt;void&gt;<br>设置能否最小化。</p>
+<p><strong>setMinimumSize(Size size)</strong> → Future&lt;void&gt;<br>设置最小尺寸。</p>
+<p><strong>isMaximizable()</strong> → Future&lt;bool&gt;<br>能否手动最大化。</p>
+<p><strong>isMaximized()</strong> → Future&lt;bool&gt;<br>是否已经最大化。</p>
+<p><strong>isMinimizable()</strong> → Future&lt;bool&gt;<br>能否手动最小化。</p>
+<p><strong>isMinimized()</strong> → Future&lt;bool&gt;<br>是否已经最小化</p>
+<p><strong>restore()</strong> → Future&lt;void&gt;<br>从最小化恢复到先前的尺寸。</p>
+<p><strong>setMovable(bool isMovable)</strong> → Future&lt;void&gt;<br>设置能否被移动。</p>
+<p><strong>isMovable()</strong> → Future&lt;bool&gt;<br>能否手动移动。</p>
+<p><strong>setResizable(bool isResizable)</strong> → Future&lt;void&gt;<br>设置能否手动设置大小。</p>
+<p><strong>isResizable()</strong> → Future&lt;bool&gt;<br>能否手动调整大小。</p>
+<p>#Windows<br><strong>maximize({bool vertically &#x3D; false})</strong> → Future&lt;void&gt;<br>最大化窗口。</p>
+<p><strong>unmaximize()</strong> → Future&lt;void&gt;<br>取消最大化。</p>
+<p><strong>minimize()</strong> → Future&lt;void&gt;<br>#最小化窗口</p>
+<hr>
+<p><strong>toString()</strong> → String</p>
+
+		</div>
+
+		
+		<div class="post-copyright-info w-full my-8 px-2 sm:px-6 md:px-8">
+			<div class="article-copyright-info-container">
+    <ul>
+        <li><strong>Title:</strong> Flutter桌面端窗口控制——window_manager插件的使用与跨平台问题</li>
+        <li><strong>Author:</strong> Anrola</li>
+        <li><strong>Created at
+                :</strong> 2026-08-14 12:09:52</li>
+        
+            <li>
+                <strong>Updated at
+                    :</strong> 2026-08-14 16:12:44
+            </li>
+        
+        <li>
+            <strong>Link:</strong> https://redefine.ohevan.com/2026/08/14/flutter-learn-2/
+        </li>
+        <li>
+            <strong>
+                License:
+            </strong>
+            
+
+            
+                This work is licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0">CC BY-NC-SA 4.0</a>.
+            
+        </li>
+    </ul>
+</div>
+
+		</div>
+		
+
+		
+		<ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/flutter/">#flutter</a>&nbsp;
+			</li>
+			
+		</ul>
+		
+
+		
+
+		
+		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			
+			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="next" rel="next" href="/2026/08/08/flutter-learn-1/">
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">flutter学习</span>
+						<span class="post-nav-item">Next posts</span>
+					</span>
+					<span class="right arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-right"></i>
+					</span>
+				</a>
+			</div>
+			
+		</div>
+		
+
+
+		
+	</div>
+
+	
+	<div class="toc-content-container">
+		<div class="post-toc-wrap">
+	<div class="post-toc">
+		<div class="toc-title">On this page</div>
+		<div class="page-title">Flutter桌面端窗口控制——window_manager插件的使用与跨平台问题</div>
+		<ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD"><span class="nav-text">1.核心功能</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-%E5%AE%89%E8%A3%85"><span class="nav-text">2.安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-%E4%BD%BF%E7%94%A8"><span class="nav-text">3.使用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-%E8%B7%A8%E5%B9%B3%E5%8F%B0%E9%97%AE%E9%A2%98"><span class="nav-text">4.跨平台问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-%E8%87%AA%E5%88%B6%E6%A0%87%E9%A2%98%E6%A0%8F"><span class="nav-text">5.自制标题栏</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%AD%E4%B8%80-WindowOptions%E7%9A%84%E5%90%84%E7%A7%8D%E8%AE%BE%E7%BD%AE"><span class="nav-text">续一.WindowOptions的各种设置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%AD%E4%BA%8C-WindowManager%E7%9A%84%E5%90%84%E7%A7%8D%E6%96%B9%E6%B3%95"><span class="nav-text">续二.WindowManager的各种方法</span></a></li></ol>
+
+	</div>
+</div>
+	</div>
+	
+</div>
+
+			</div>
+
+			
+		</div>
+
+		<div class="main-content-footer">
+			<footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2022</span>
+              -
+            
+            2026&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">Anrola</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        6 posts in total
+                    </span>
+                    
+                </p>
+            
+        </div>
+        
+            <script data-swup-reload-script src="https://cn.vercount.one/js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">VISITOR COUNT</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">TOTAL PAGE VIEWS</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.9.0</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+		</div>
+	</div>
+
+	
+	<div class="post-tools">
+		<div class="post-tools-container">
+	<ul class="article-tools-list">
+		<!-- TOC aside toggle -->
+		
+		<li class="right-bottom-tools page-aside-toggle">
+			<i class="fa-regular fa-outdent"></i>
+		</li>
+		
+
+		<!-- go comment -->
+		
+	</ul>
+</div>
+	</div>
+	
+
+	<div class="right-side-tools-container">
+		<div class="side-tools-container">
+	<ul class="hidden-tools-list">
+		<li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-plus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-minus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+			<i class="fa-regular fa-moon"></i>
+		</li>
+
+		<!-- rss -->
+		
+
+		
+
+		<li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+			<i class="fa-regular fa-arrow-down"></i>
+		</li>
+	</ul>
+
+	<ul class="visible-tools-list">
+		<li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+			<i class="fa-regular fa-cog fa-spin"></i>
+		</li>
+		
+		<li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+			<i class="arrow-up fas fa-arrow-up"></i>
+			<span class="percent"></span>
+		</li>
+		
+		
+	</ul>
+</div>
+	</div>
+
+	<div class="image-viewer-container" role="dialog" aria-modal="true" aria-label="Image viewer">
+	<button class="image-viewer-close" type="button" aria-label="Close">
+		<i class="fa-solid fa-xmark"></i>
+	</button>
+	<button class="image-viewer-prev" type="button" aria-label="Prev">
+		<i class="fa-solid fa-chevron-left"></i>
+	</button>
+	<div class="image-viewer-frame">
+		<img src="" alt="">
+	</div>
+	<div class="image-viewer-exif-panel hidden absolute left-1/2 bottom-20 -translate-x-1/2 w-[min(92vw,420px)] max-h-[60vh] overflow-hidden rounded-2xl bg-background-color-transparent-80 p-4 text-left shadow-redefine-flat backdrop-blur-md" role="dialog" aria-label="EXIF" aria-hidden="true">
+		<div class="flex items-center justify-between mb-3">
+			<span class="text-sm font-semibold text-first-text-color">EXIF</span>
+			<button class="image-viewer-exif-close flex h-8 w-8 items-center justify-center rounded-full bg-background-color-transparent-80 text-first-text-color transition hover:bg-background-color-transparent-40" type="button" aria-label="Close">
+				<i class="fa-solid fa-xmark text-[0.65rem]"></i>
+			</button>
+		</div>
+		<div class="image-viewer-exif-cards grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[50vh] overflow-y-auto pr-1 scrollbar-hide"></div>
+		<template class="image-viewer-exif-card-template">
+			<div class="rounded-lg bg-background-color-transparent-40 px-3 py-2">
+				<div class="image-viewer-exif-card-header flex items-center gap-2 mb-1">
+					<i class="image-viewer-exif-card-icon fa-solid fa-circle-info text-xs text-third-text-color"></i>
+					<div class="image-viewer-exif-card-title text-xs font-semibold text-first-text-color"></div>
+				</div>
+				<div class="image-viewer-exif-card-items flex flex-col gap-1"></div>
+			</div>
+		</template>
+	</div>
+	<button class="image-viewer-exif-toggle flex items-center gap-2 hidden absolute left-1/2 bottom-6 -translate-x-1/2 rounded-full border border-border-color bg-background-color-transparent-80 px-4 py-2 text-first-text-color backdrop-blur-md transition hover:bg-background-color-transparent-40" type="button" aria-label="EXIF" aria-expanded="false">
+		<i class="fa-solid fa-circle-info text-xs"></i>
+		<span class="text-xs font-semibold uppercase tracking-wider">EXIF</span>
+	</button>
+	<button class="image-viewer-next" type="button" aria-label="Next">
+		<i class="fa-solid fa-chevron-right"></i>
+	</button>
+</div>
+
+
+	
+
+</main>
+
+
+
+<script src="/js/build/libs/Swup.min.js"></script>
+
+<script src="/js/build/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/build/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    window.swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+
+    window.dispatchEvent(
+        new CustomEvent("redefine:swup:ready", {
+            detail: {
+                swup: window.swup,
+            },
+        }),
+    );
+</script>
+
+
+
+
+	
+<script src="/js/build/main.js" type="module"></script>
+
+
+
+    
+<script src="/js/build/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+
+
+
+  
+<script src="/js/build/libs/Typed.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+<script src="/js/build/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+
+	
+	<div id="aplayer"></div>
+
+<script src="/js/build/libs/APlayer.min.js"></script>
+
+
+<script src="/js/build/plugins/aplayer.js"></script>
+
+
+	
+</body>
+
+</html>
