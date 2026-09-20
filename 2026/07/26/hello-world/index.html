@@ -534,7 +534,7 @@ mjx-container[display="true"] + br {
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">7</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">8</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -571,7 +571,7 @@ mjx-container[display="true"] + br {
 				<div class="author flex items-center">
 					<span class="name text-default-text-color text-lg font-semibold">Anrola</span>
 					
-					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv1</span>
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv2</span>
 					
 				</div>
 				<div class="meta-info">
@@ -614,11 +614,11 @@ mjx-container[display="true"] + br {
             <ul>
                 
                     <li>
-                        <a href="/tags/Hexo/">Hexo</a>&nbsp;
+                        <a href="/tags/Github/">Github</a>&nbsp;
                     </li>
                 
                     <li>
-                        | <a href="/tags/Github/">Github</a>&nbsp;
+                        | <a href="/tags/Hexo/">Hexo</a>&nbsp;
                     </li>
                 
                     <li>
@@ -660,15 +660,21 @@ mjx-container[display="true"] + br {
 <p><code>type</code>: git<br><code>repo</code>: 仓库的SSH链接<br><code>branch</code>: 分支名  </p>
 <p>输入<code>npm install hexo-deployer-git --save</code>安装git插件。</p>
 <div class="code-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#清理缓存</span></span><br><span class="line">hexo clear</span><br><span class="line"><span class="comment">#生成文件</span></span><br><span class="line">hexo generate</span><br><span class="line"><span class="comment">#部署到github</span></span><br><span class="line">hexo depoly</span><br></pre></td></tr></table></figure></div>
-<p>部署成功之后可以访问“<a class="link"   target="_blank" rel="noopener" href="https://用户名.github.io”进入博客。" >https://用户名.github.io”进入博客。<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+
+<p>部署成功之后可以访问“https:&#x2F;&#x2F;用户名.github.io”进入博客。</p>
 <h2 id="主题安装"><a href="#主题安装" class="headerlink" title="主题安装"></a>主题安装</h2><div class="code-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#安装redefine主题</span></span><br><span class="line">npm install hexo-theme-redefine@latest</span><br></pre></td></tr></table></figure></div>
+
 <p>在<code>_config.yml</code>里找到theme项，改为redefine。</p>
 <div class="code-container" data-rel="Yml"><figure class="iseeu highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Extensions</span></span><br><span class="line"><span class="comment">## Plugins: https://hexo.io/plugins/</span></span><br><span class="line"><span class="comment">## Themes: https://hexo.io/themes/</span></span><br><span class="line"><span class="attr">theme:</span> <span class="string">redefine</span></span><br></pre></td></tr></table></figure></div>
+
 <p>Redefine 推荐使用独立的配置文件<br>1.在你的 Hexo 博客根目录下，新建一个名为 _config.redefine.yml 的文件。<br>2.打开 Redefine 主题的<a class="link"   target="_blank" rel="noopener" href="https://github.com/EvanNotFound/hexo-theme-redefine/blob/main/_config.yml" >官方配置文件<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a>，将其中的所有内容复制到你新建的 _config.redefine.yml 文件中。</p>
 <p>配置好后重新部署即可。<br>官方文档：<br><a class="link"   target="_blank" rel="noopener" href="https://redefine-docs.ohevan.com/zh/docs" >https://redefine-docs.ohevan.com/zh/docs<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a><br><a class="link"   target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/" >https://hexo.io/zh-cn/docs/<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
 <h2 id="书写"><a href="#书写" class="headerlink" title="书写"></a>书写</h2><div class="code-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure></div>
-<p>创建一个新文章，以md格式存储在<code>/source/_posts/</code>。<br>也可以手动在此目录创建md文件，但是需要注意添加参数：<br><div class="code-container" data-rel="Yml"><figure class="iseeu highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">title:</span> <span class="string">Hello</span> <span class="string">World</span></span><br><span class="line"><span class="attr">date:</span> <span class="number">2013</span><span class="string">/7/13</span> <span class="number">20</span><span class="string">:46:25</span></span><br><span class="line"><span class="attr">comments:</span> <span class="literal">true</span> <span class="comment">#开启文章的评论功能	</span></span><br><span class="line"><span class="attr">published:</span> <span class="literal">true</span> <span class="comment">#文章是否发布</span></span><br><span class="line"><span class="attr">tags:</span> <span class="string">c++</span> <span class="comment">#标签（不适用于分页）	</span></span><br><span class="line"><span class="attr">categories:</span> <span class="string">c++</span>	<span class="comment">#分类（不适用于分页）</span></span><br><span class="line"><span class="meta">---</span></span><br></pre></td></tr></table></figure></div><br>如果该文章需要展示图片，pdf等其他文件时，需要自行创建一个同名文件夹。<br>示例，如果你的markdown文件叫做_posts/markdown-demo.md的话，同名文件夹就是_posts/markdown-demo/。</p>
-<p>如果你将<em>*</em>.github.io/_config.yml中的post_asset_folder设置为true，那么使用hexo命令，则会自行创建这个同名文件夹。</p>
+
+<p>创建一个新文章，以md格式存储在<code>/source/_posts/</code>。<br>也可以手动在此目录创建md文件，但是需要注意添加参数：</p>
+<div class="code-container" data-rel="Yml"><figure class="iseeu highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">title:</span> <span class="string">Hello</span> <span class="string">World</span></span><br><span class="line"><span class="attr">date:</span> <span class="number">2013</span><span class="string">/7/13</span> <span class="number">20</span><span class="string">:46:25</span></span><br><span class="line"><span class="attr">comments:</span> <span class="literal">true</span> <span class="comment">#开启文章的评论功能	</span></span><br><span class="line"><span class="attr">published:</span> <span class="literal">true</span> <span class="comment">#文章是否发布</span></span><br><span class="line"><span class="attr">tags:</span> <span class="string">c++</span> <span class="comment">#标签（不适用于分页）	</span></span><br><span class="line"><span class="attr">categories:</span> <span class="string">c++</span>	<span class="comment">#分类（不适用于分页）</span></span><br><span class="line"><span class="meta">---</span></span><br></pre></td></tr></table></figure></div>
+<p>如果该文章需要展示图片，pdf等其他文件时，需要自行创建一个同名文件夹。<br>示例，如果你的markdown文件叫做_posts&#x2F;markdown-demo.md的话，同名文件夹就是_posts&#x2F;markdown-demo&#x2F;。</p>
+<p>如果你将***.github.io&#x2F;_config.yml中的post_asset_folder设置为true，那么使用hexo命令，则会自行创建这个同名文件夹。</p>
 
 		</div>
 
@@ -709,11 +715,11 @@ mjx-container[display="true"] + br {
 		<ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
 			
 			<li class="tag-item mx-0.5">
-				<a href="/tags/Hexo/">#Hexo</a>&nbsp;
+				<a href="/tags/Github/">#Github</a>&nbsp;
 			</li>
 			
 			<li class="tag-item mx-0.5">
-				<a href="/tags/Github/">#Github</a>&nbsp;
+				<a href="/tags/Hexo/">#Hexo</a>&nbsp;
 			</li>
 			
 			<li class="tag-item mx-0.5">
@@ -910,7 +916,7 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        7 posts in total
+                        8 posts in total
                     </span>
                     
                 </p>

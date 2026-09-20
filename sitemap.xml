@@ -11,6 +11,15 @@
   </url>
   
   <url>
+    <loc>https://anrola-star.github.io/2026/09/20/00.%E4%BB%80%E4%B9%88%E6%98%AF%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/</loc>
+    
+    <lastmod>2026-09-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://anrola-star.github.io/2026/08/06/git-usage-2/</loc>
     
     <lastmod>2026-09-20</lastmod>
@@ -122,14 +131,14 @@
   </url>
   
   <url>
-    <loc>https://anrola-star.github.io/tags/Hexo/</loc>
+    <loc>https://anrola-star.github.io/tags/Github/</loc>
     <lastmod>2026-09-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://anrola-star.github.io/tags/Github/</loc>
+    <loc>https://anrola-star.github.io/tags/Hexo/</loc>
     <lastmod>2026-09-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
