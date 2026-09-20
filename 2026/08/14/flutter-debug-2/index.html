@@ -94,7 +94,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://anrola-star.github.io/images/redefine-og.webp">
 <meta property="article:published_time" content="2026-08-14T10:36:40.995Z">
-<meta property="article:modified_time" content="2026-09-20T11:06:41.831Z">
+<meta property="article:modified_time" content="2026-09-20T12:09:49.428Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="Android">
 <meta property="article:tag" content="debug">
@@ -585,8 +585,8 @@ mjx-container[display="true"] + br {
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2026-09-20 19:06:41</span>
-            <span class="mobile">2026-09-20 19:06:41</span>
+            <span class="desktop">2026-09-20 20:09:49</span>
+            <span class="mobile">2026-09-20 20:09:49</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -657,9 +657,9 @@ mjx-container[display="true"] + br {
 <blockquote>
 <p>java.lang.Exception: Could not close incremental caches…</p>
 </blockquote>
-<p>这是 Kotlin 增量编译缓存损坏导致的构建失败（Could not close incremental caches），是环境缓存问题，不是代码问题。<br>多个插件（audioplayers&#x2F;video_player&#x2F;shared_preferences）的 Kotlin 编译在共享缓存上冲突，或上次构建中断留下了损坏缓存。</p>
+<p>这是 Kotlin 增量编译缓存损坏导致的构建失败（Could not close incremental caches），是环境缓存问题，不是代码问题。<br>多个插件（audioplayers/video_player/shared_preferences）的 Kotlin 编译在共享缓存上冲突，或上次构建中断留下了损坏缓存。</p>
 <p>可以尝试清理再重建。<br>flutter clean<br>还是没成功</p>
-<p>在 android&#x2F;gradle.properties 里加了两个配置：<br>kotlin.incremental&#x3D;false<br>kotlin.compiler.execution.strategy&#x3D;in-process</p>
+<p>在 android/gradle.properties 里加了两个配置：<br>kotlin.incremental=false<br>kotlin.compiler.execution.strategy=in-process</p>
 <p>禁用增量编译 + 改为进程内编译</p>
 <p>可以解决问题。</p>
 
@@ -676,7 +676,7 @@ mjx-container[display="true"] + br {
         
             <li>
                 <strong>Updated at
-                    :</strong> 2026-09-20 19:06:41
+                    :</strong> 2026-09-20 20:09:49
             </li>
         
         <li>
