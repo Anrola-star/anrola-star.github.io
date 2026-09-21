@@ -78,7 +78,7 @@
     
     <!--- Seo Part-->
     
-    <link rel="canonical" href="https://anrola-star.github.io/404.html"/>
+    <link rel="canonical" href="https://anrola-star.github.io/2026/09/21/flutter-debug-1/"/>
     <meta name="robots" content="index,follow">
     <meta name="googlebot" content="index,follow">
     <meta name="revisit-after" content="1 days">
@@ -86,14 +86,19 @@
     
         
         <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Page Not Found">
-<meta property="og:url" content="https://anrola-star.github.io/404.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="flutter安卓开发遇到的问题—— 1">
+<meta property="og:url" content="https://anrola-star.github.io/2026/09/21/flutter-debug-1/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://anrola-star.github.io/images/redefine-og.webp">
+<meta property="article:published_time" content="2026-09-21T11:34:40.604Z">
+<meta property="article:modified_time" content="2026-09-20T11:06:41.827Z">
 <meta property="article:author" content="John Doe">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="debug">
+<meta property="article:tag" content="flutter">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://anrola-star.github.io/images/redefine-og.webp">
     
@@ -107,7 +112,7 @@
     
     <title>
         
-            Page Not Found | Anrola博客——锐意学习中...
+            flutter安卓开发遇到的问题—— 1 | Anrola博客——锐意学习中...
         
     </title>
 
@@ -546,13 +551,337 @@ mjx-container[display="true"] + br {
 			
 
 			<div class="main-content">
-				<div class="nf-container">
-    <div class="nf-text">
-        <h1>404<br>Page Not Found</h1>
+				<div class="post-page-container flex relative justify-between box-border w-full h-full">
+	<div class="article-content-container">
+
+		<div class="article-title relative w-full">
+			
+			<div class="w-full flex items-center pt-6 justify-start">
+				<h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">flutter安卓开发遇到的问题—— 1</h1>
+			</div>
+			
+		</div>
+
+		
+		<div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+			<div class="avatar w-[46px] h-[46px] shrink-0 rounded-medium border border-border-color p-px">
+				<img src="/images/myIcon.jpg">
+			</div>
+			<div class="info flex flex-col justify-between">
+				<div class="author flex items-center">
+					<span class="name text-default-text-color text-lg font-semibold">Anrola</span>
+					
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv2</span>
+					
+				</div>
+				<div class="meta-info">
+					<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2026-09-21 19:34:40</span>
+        <span class="mobile">2026-09-21 19:34:40</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2026-09-20 19:06:41</span>
+            <span class="mobile">2026-09-20 19:06:41</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/flutter/">flutter</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/Android/">Android</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/debug/">debug</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+				</div>
+			</div>
+		</div>
+		
+
+		
+
+
+		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+			<p>最近尝试用Flutter开发安卓应用。<br>在创建好项目运行时遇到如下问题。</p>
+<h2 id="一："><a href="#一：" class="headerlink" title="一："></a>一：</h2><div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmdline-tools component is missing</span><br></pre></td></tr></table></figure></div>
+<p>解决方法：<br>在Android studio打开<strong>settings</strong> &gt;&gt; <strong>Languages &amp; Frameworks</strong> &gt;&gt; <strong>Android SDK</strong> &gt;&gt; <strong>SDK Tools</strong><br>找到<strong>Android SDK Commend-line Tools</strong>勾上并应用。<br>等待下载完成。</p>
+<h2 id="二："><a href="#二：" class="headerlink" title="二："></a>二：</h2><div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Exception in thread &quot;main&quot; javax.net.ssl.SSLHandshakeException: </span><br><span class="line">(certificate_unknown) PKIX path building failed: </span><br><span class="line">sun.security.provider.certpath.SunCertPathBuilderException: </span><br><span class="line">unable to find valid certification path to requested target</span><br></pre></td></tr></table></figure></div>
+<p>在<strong>gradle.properties</strong>设置代理。  </p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">systemProp.http.proxyHost=127.0.0.1</span><br><span class="line">systemProp.http.proxyPort=7890</span><br><span class="line">systemProp.https.proxyHost=127.0.0.1</span><br><span class="line">systemProp.https.proxyPort=7890</span><br><span class="line">systemProp.http.nonProxyHosts=localhost|127.0.0.1|10.*</span><br></pre></td></tr></table></figure></div>
+
+
+<h2 id="三："><a href="#三：" class="headerlink" title="三："></a>三：</h2><div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">┌─ Flutter Fix ──────────────────────────────────────────────────────────────────────────────────┐</span><br><span class="line">│     [!] This is likely due to a malformed download of the NDK.                                 │</span><br><span class="line">│     This can be fixed by deleting the local NDK copy at: C:\Programs\Android\ndk\28.2.13676358 │</span><br><span class="line">│     and allowing the Android Gradle Plugin to automatically re-download it.                    │</span><br><span class="line">│                                                                                                │</span><br><span class="line">└────────────────────────────────────────────────────────────────────────────────────────────────┘</span><br></pre></td></tr></table></figure></div>
+<p><del>重新下载NDK，与问题一类似。</del><br>手动下载NDK可能会导致下载的版本和项目所用版本不一样，可以直接去NDK目录删掉对应版本。<br>然后再次运行，会自动下载对应版本NDK。</p>
+<h2 id="四："><a href="#四：" class="headerlink" title="四："></a>四：</h2><p>很多时候会遇到模拟器启动但是完全无法操作，而且运行时会卡在安装apk这一步。</p>
+<p>可以在运行时选择冷启动（cold boot）,会完全重启模拟器。</p>
+<h2 id="五："><a href="#五：" class="headerlink" title="五："></a>五：</h2><p>在VScode里面写kotlin时，库解析全部失效，全部爆红。<br>在指令输入重启kotlin服务后，当前页码恢复正常，但是一旦切换页面，又会全部爆红。</p>
+<p>解决方法是：把.idea和.dart_tool全删了，然后重新打开项目。<br>注意安装kotlin插件。</p>
+<p><strong>另外</strong><br>每次修改完都建议在Gradle里clean一下项目。</p>
+
+		</div>
+
+		
+		<div class="post-copyright-info w-full my-8 px-2 sm:px-6 md:px-8">
+			<div class="article-copyright-info-container">
+    <ul>
+        <li><strong>Title:</strong> flutter安卓开发遇到的问题—— 1</li>
+        <li><strong>Author:</strong> Anrola</li>
+        <li><strong>Created at
+                :</strong> 2026-09-21 19:34:40</li>
+        
+            <li>
+                <strong>Updated at
+                    :</strong> 2026-09-20 19:06:41
+            </li>
+        
+        <li>
+            <strong>Link:</strong> https://redefine.ohevan.com/2026/09/21/flutter-debug-1/
+        </li>
+        <li>
+            <strong>
+                License:
+            </strong>
+            
+
+            
+                This work is licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0">CC BY-NC-SA 4.0</a>.
+            
+        </li>
+    </ul>
+</div>
+
+		</div>
+		
+
+		
+		<ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/flutter/">#flutter</a>&nbsp;
+			</li>
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/Android/">#Android</a>&nbsp;
+			</li>
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/debug/">#debug</a>&nbsp;
+			</li>
+			
+		</ul>
+		
+
+		
+
+		
+		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="prev" rel="prev" href="/2026/09/21/flutter-debug-2/">
+					<span class="left arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-left"></i>
+					</span>
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">flutter安卓开发遇到的问题—— 2</span>
+						<span class="post-nav-item">Prev posts</span>
+					</span>
+				</a>
+			</div>
+			
+			
+		</div>
+		
+
+
+		
+		<div class="comment-container px-2 sm:px-6 md:px-8 pb-8">
+			<div class="comments-container mt-10 w-full ">
+    <div id="comment-anchor" class="w-full h-2.5"></div>
+    <div class="comment-area-title w-full my-1.5 md:my-2.5 text-xl md:text-3xl font-bold">
+        Comments
     </div>
-    <div class="nf-button">
-        <a href="/" class="button large center"><i class="fa-regular fa-house"></i> Go Back Home</a>
-    </div>
+    
+
+        
+            
+    <div id="giscus-container"></div>
+    <script data-swup-reload-script defer>
+        (function() {
+            const containerId = "giscus-container";
+            const mapping = "pathname";
+            const lang = "zh-CN";
+            const inputPosition = "top";
+            const reactionsEnabled = "1" === "1";
+            const emitMetadata = "1" === "1";
+            const strict = "0" === "1";
+            const loading = "lazy";
+
+            const getTerm = () => {
+                if (mapping === "pathname") return location.pathname;
+                if (mapping === "url") return location.href;
+                if (mapping === "title") return document.title;
+                if (mapping === "og:title") {
+                    const ogTitle = document.querySelector("meta[property='og:title']");
+                    return ogTitle?.content || document.title;
+                }
+                return "";
+            };
+
+            const sendUpdate = () => {
+                const iframe = document.querySelector("iframe.giscus-frame");
+                if (!iframe) {
+                    return;
+                }
+
+                const setConfig = {
+                    theme: "preferred_color_scheme",
+                    lang,
+                    inputPosition,
+                    reactionsEnabled,
+                    emitMetadata,
+                    strict,
+                };
+
+                if (mapping !== "number") {
+                    const term = getTerm();
+                    if (term) {
+                        setConfig.term = term;
+                    }
+                }
+
+                iframe.contentWindow.postMessage(
+                    { giscus: { setConfig } },
+                    "https://giscus.app",
+                );
+            };
+
+            const loadGiscus = () => {
+                const container = document.getElementById(containerId);
+                if (!container) {
+                    return;
+                }
+
+                const iframe = container.querySelector("iframe.giscus-frame");
+                if (iframe) {
+                    sendUpdate();
+                    return;
+                }
+
+                if (container.dataset.giscusInit === "true") {
+                    return;
+                }
+
+                const giscusConfig = {
+                    src: "https://giscus.app/client.js",
+                    "data-repo": "Anrola-star/CommentForMyBlog",
+                    "data-repo-id": "R_kgDOT4Zs3w",
+                    "data-category": "Announcements",
+                    "data-category-id": "DIC_kwDOT4Zs384DDXg4",
+                    "data-mapping": mapping,
+                    "data-strict": "0",
+                    "data-reactions-enabled": "1",
+                    "data-emit-metadata": "1",
+                    "data-theme": "preferred_color_scheme",
+                    "data-lang": lang,
+                    "data-input-position": inputPosition,
+                    "data-loading": loading,
+                    crossorigin: "anonymous",
+                    async: true,
+                };
+
+                const giscusScript = document.createElement("script");
+                for (const key in giscusConfig) {
+                    giscusScript.setAttribute(key, giscusConfig[key]);
+                }
+                container.appendChild(giscusScript);
+                container.dataset.giscusInit = "true";
+            };
+
+            const runGiscus = () => {
+                const container = document.getElementById(containerId);
+                if (!container) {
+                    return;
+                }
+
+                if (container.querySelector("iframe.giscus-frame")) {
+                    sendUpdate();
+                    return;
+                }
+
+                loadGiscus();
+            };
+
+            runGiscus();
+        })();
+    </script>
+
+
+        
+    
+</div>
+
+		</div>
+		
+	</div>
+
+	
+	<div class="toc-content-container">
+		<div class="post-toc-wrap">
+	<div class="post-toc">
+		<div class="toc-title">On this page</div>
+		<div class="page-title">flutter安卓开发遇到的问题—— 1</div>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%EF%BC%9A"><span class="nav-text">一：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%EF%BC%9A"><span class="nav-text">二：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%EF%BC%9A"><span class="nav-text">三：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%EF%BC%9A"><span class="nav-text">四：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%EF%BC%9A"><span class="nav-text">五：</span></a></li></ol>
+
+	</div>
+</div>
+	</div>
+	
 </div>
 
 			</div>
@@ -632,6 +961,26 @@ mjx-container[display="true"] + br {
 		</div>
 	</div>
 
+	
+	<div class="post-tools">
+		<div class="post-tools-container">
+	<ul class="article-tools-list">
+		<!-- TOC aside toggle -->
+		
+		<li class="right-bottom-tools page-aside-toggle">
+			<i class="fa-regular fa-outdent"></i>
+		</li>
+		
+
+		<!-- go comment -->
+		
+		<li class="go-comment">
+			<i class="fa-regular fa-comments"></i>
+		</li>
+		
+	</ul>
+</div>
+	</div>
 	
 
 	<div class="right-side-tools-container">
@@ -756,6 +1105,7 @@ mjx-container[display="true"] + br {
         }),
     );
 </script>
+
 
 
 
